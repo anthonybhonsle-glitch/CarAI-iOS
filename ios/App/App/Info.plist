@@ -47,9 +47,13 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>CarAI Pro connects to ELM327 OBD-II Bluetooth adapters to diagnose vehicle trouble codes and live telemetry.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>CarAI Pro connects to OBD-II vehicle diagnostic adapters.</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>arm64</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

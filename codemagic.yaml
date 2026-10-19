@@ -4,12 +4,17 @@ workflows:
     max_build_duration: 60
     instance_type: mac_mini_m2
     environment:
-      node: 20
+      node: 22
       xcode: latest
       cocoapods: default
     scripts:
-      - name: Install dependencies
+      - name: Setup Node 22 & Install dependencies
         script: |
+          if command -v nvm &> /dev/null; then
+            nvm install 22 || true
+            nvm use 22 || true
+          fi
+          echo "Active Node Version: $(node -v)"
           npm install --legacy-peer-deps
       - name: Build Web App
         script: |
@@ -20,12 +25,20 @@ workflows:
       - name: Build iOS Application
         script: |
           cd ios/App
-          if [ -d "App.xcworkspace" ]; then
-            xcodebuild -workspace App.xcworkspace -scheme App -destination 'generic/platform=iOS' -configuration Release CODE_SIGNING_ALLOWED=NO archive -archivePath build/App.xcarchive
-          else
-            xcodebuild -project App.xcodeproj -scheme App -destination 'generic/platform=iOS' -configuration Release CODE_SIGNING_ALLOWED=NO archive -archivePath build/App.xcarchive
+          xcodebuild -resolvePackageDependencies -project App.xcodeproj -scheme App || true
+          xcodebuild -project App.xcodeproj \
+            -scheme App \
+            -destination 'generic/platform=iOS' \
+            -configuration Release \
+            CODE_SIGNING_ALLOWED=NO \
+            archive -archivePath build/App.xcarchive
+          mkdir -p build/Payload
+          if [ -d "build/App.xcarchive/Products/Applications/App.app" ]; then
+            cp -r build/App.xcarchive/Products/Applications/App.app build/Payload/
+            cd build && zip -r -y App.ipa Payload && cd ..
           fi
     artifacts:
+      - ios/App/build/App.ipa
       - ios/App/build/App.xcarchive
       - ios/App/build/**/*.app
       - /tmp/xcodebuild_logs/*.log
