@@ -32,16 +32,36 @@ export default function App() {
   const [telemetry, setTelemetry] = useState<OBDTelemetry>(obdManager.getTelemetry());
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(authService.getCurrentSession());
 
-  const [user, setUser] = useState<UserSubscriptionState>({
-    userId: currentUser?.userId || 'usr_demo_72c9a80e',
-    isPro: false,
-    freeRendersUsed: 0,
-    freeRendersLimit: 1,
-    plan: null,
-    activeTrial: false,
-    trialDaysLeft: 0,
-    expiresAt: null,
+  const [user, setUser] = useState<UserSubscriptionState>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('carai_cached_user');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed && typeof parsed === 'object') return parsed;
+        }
+      } catch {}
+    }
+    return {
+      userId: currentUser?.userId || 'usr_demo_72c9a80e',
+      isPro: false,
+      freeRendersUsed: 0,
+      freeRendersLimit: 1,
+      plan: null,
+      activeTrial: false,
+      trialDaysLeft: 0,
+      expiresAt: null,
+    };
   });
+
+  const handleUpdateUser = (updatedUser: UserSubscriptionState) => {
+    setUser(updatedUser);
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('carai_cached_user', JSON.stringify(updatedUser));
+      } catch {}
+    }
+  };
 
   const [isConnected, setIsConnected] = useState<boolean>(true);
   const [isHardware, setIsHardware] = useState<boolean>(false);
@@ -131,7 +151,7 @@ export default function App() {
 
     // Fetch initial subscription state from backend
     getUserSubscription(user.userId)
-      .then((data) => setUser(data))
+      .then((data) => handleUpdateUser(data))
       .catch((err) => console.error('Failed to fetch user subscription:', err));
 
     return () => {
@@ -341,7 +361,7 @@ export default function App() {
         {activeTab === 'payment' && (
           <PaymentPage
             user={user}
-            onUpdateUser={setUser}
+            onUpdateUser={handleUpdateUser}
             initialPlan={paymentInitialPlan}
             onBack={() => handleNavigateTab('flagship')}
             onSuccessRedirect={(tab) => handleNavigateTab((tab as NavTab) || 'diagnostics')}
@@ -818,10 +838,11 @@ export default function App() {
         isOpen={paywallOpen}
         onClose={() => setPaywallOpen(false)}
         user={user}
-        onUpdateUser={setUser}
+        onUpdateUser={handleUpdateUser}
         triggerContext={paywallTriggerContext}
         onNavigateToPaymentPage={(plan) => {
           if (plan) setPaymentInitialPlan(plan);
+          setPaywallOpen(false);
           handleNavigateTab('payment');
         }}
       />

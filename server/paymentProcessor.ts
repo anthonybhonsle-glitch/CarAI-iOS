@@ -93,7 +93,7 @@ export function processDirectBankCheckout(
       : planType === 'pro_biannual'
       ? 39.99
       : 9.99;
-  const normalizedMethod =
+    const normalizedMethod =
     (paymentMethod as string) === 'card' || paymentMethod === 'credit_card'
       ? 'credit_card'
       : paymentMethod === 'bank_ach'
@@ -102,10 +102,16 @@ export function processDirectBankCheckout(
       ? 'apple_pay'
       : paymentMethod === 'google_pay'
       ? 'google_pay'
+      : (paymentMethod as string) === 'upi'
+      ? 'upi'
       : 'credit_card';
 
   // Process and sanitize payment credentials according to channel
-  if (normalizedMethod === 'credit_card') {
+  if (normalizedMethod === 'upi') {
+    const rawUpi = (req.upiId || 'driver@okhdfcbank').trim();
+    paymentDetailsMasked = `UPI ID: ${rawUpi}`;
+    bankSettlementNetwork = 'NPCI Unified Payments Interface (UPI 2.0 Real-Time Settlement)';
+  } else if (normalizedMethod === 'credit_card') {
     const rawNumber = (cardNumber && cardNumber.trim().length > 0)
       ? cardNumber
       : '4000 1234 5678 4242';

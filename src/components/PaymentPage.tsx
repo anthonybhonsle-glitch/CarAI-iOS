@@ -66,7 +66,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
   initialPlan = 'annual',
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<'annual' | 'biannual' | 'monthly'>(initialPlan);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'apple_pay' | 'bank_ach'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'apple_pay' | 'upi' | 'bank_ach'>('card');
 
   // Payment Form State (pre-filled with verified test credentials for sub-30 second seamless checkout)
   const [cardholderName, setCardholderName] = useState('Alex Vance');
@@ -76,6 +76,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
   const [billingZip, setBillingZip] = useState('90210');
   const [bankRoutingNumber, setBankRoutingNumber] = useState('021000021');
   const [bankAccountNumber, setBankAccountNumber] = useState('9876543210');
+  const [upiId, setUpiId] = useState('driver@okhdfcbank');
 
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingPhase, setLoadingPhase] = useState<string>('');
@@ -99,7 +100,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
     }
   };
 
-  const handleExecutePayment = async (overrideMethod?: 'card' | 'apple_pay' | 'bank_ach') => {
+  const handleExecutePayment = async (overrideMethod?: 'card' | 'apple_pay' | 'upi' | 'bank_ach') => {
     haptics.mediumSuccess();
     setLoading(true);
     setErrorMessage(null);
@@ -115,8 +116,8 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
 
     try {
       // Realistic smooth progress phases for seamless user feedback
-      setTimeout(() => setLoadingPhase('Verifying Merchant Clearing Rails (JPMorgan Chase)...'), 400);
-      setTimeout(() => setLoadingPhase('Authorizing Payment Settlement...'), 900);
+      setTimeout(() => setLoadingPhase('Verifying Merchant Clearing Rails (JPMorgan Chase)...'), 300);
+      setTimeout(() => setLoadingPhase('Authorizing Payment Settlement...'), 600);
 
       const checkoutData = {
         userId: user.userId,
@@ -124,6 +125,8 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
         paymentMethod:
           methodToUse === 'card'
             ? 'credit_card'
+            : methodToUse === 'upi'
+            ? 'upi'
             : methodToUse === 'bank_ach'
             ? 'bank_ach'
             : 'apple_pay',
@@ -134,6 +137,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
         billingZip,
         bankRoutingNumber,
         bankAccountNumber,
+        upiId,
       };
 
       const result = await processDirectBankCheckoutApi(checkoutData as any);
@@ -345,8 +349,10 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                 onClick={() => {
                   haptics.lightTap();
                   setSelectedPlan('annual');
+                  const el = document.getElementById('checkout-form-section');
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
-                className={`relative flex flex-col justify-between w-full rounded-2xl border p-4 text-left transition-all min-h-[64px] ${
+                className={`relative flex flex-col justify-between w-full rounded-2xl border p-4 text-left transition-all min-h-[64px] cursor-pointer active:scale-[0.99] ${
                   selectedPlan === 'annual'
                     ? 'border-cyan-400 bg-cyan-500/15 shadow-xl ring-2 ring-cyan-400/50'
                     : 'border-[#243042] bg-[#121822] hover:border-[#33425A]'
@@ -362,6 +368,13 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                 <p className="mt-1 text-xs text-zinc-300 leading-relaxed font-normal">
                   Full 3-day complimentary trial, then $79.00 billed annually ($6.58/mo). Cancel anytime with 1 tap.
                 </p>
+                <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-[#243042]/50">
+                  <span className="text-[11px] text-cyan-400 font-mono-tech">Includes all Pro features</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 bg-cyan-500/20 px-2.5 py-1 rounded-lg border border-cyan-500/30">
+                    <span>Select &amp; Pay</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </div>
               </button>
 
               {/* 6 Months Plan ($39.99 / 6 mo) */}
@@ -372,8 +385,10 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                 onClick={() => {
                   haptics.lightTap();
                   setSelectedPlan('biannual');
+                  const el = document.getElementById('checkout-form-section');
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
-                className={`relative flex flex-col justify-between w-full rounded-2xl border p-4 text-left transition-all min-h-[64px] ${
+                className={`relative flex flex-col justify-between w-full rounded-2xl border p-4 text-left transition-all min-h-[64px] cursor-pointer active:scale-[0.99] ${
                   selectedPlan === 'biannual'
                     ? 'border-cyan-400 bg-cyan-500/15 shadow-xl ring-2 ring-cyan-400/50'
                     : 'border-[#243042] bg-[#121822] hover:border-[#33425A]'
@@ -389,6 +404,13 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                 <p className="mt-1 text-xs text-zinc-300 leading-relaxed font-normal">
                   Billed every 6 months ($6.66/mo). Ideal balance between flexibility and savings.
                 </p>
+                <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-[#243042]/50">
+                  <span className="text-[11px] text-cyan-400 font-mono-tech">No long-term contract</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 bg-cyan-500/20 px-2.5 py-1 rounded-lg border border-cyan-500/30">
+                    <span>Select &amp; Pay</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </div>
               </button>
 
               {/* Monthly Plan ($9.99/mo) */}
@@ -399,8 +421,10 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                 onClick={() => {
                   haptics.lightTap();
                   setSelectedPlan('monthly');
+                  const el = document.getElementById('checkout-form-section');
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
-                className={`flex flex-col justify-between w-full rounded-2xl border p-4 text-left transition-all min-h-[64px] ${
+                className={`flex flex-col justify-between w-full rounded-2xl border p-4 text-left transition-all min-h-[64px] cursor-pointer active:scale-[0.99] ${
                   selectedPlan === 'monthly'
                     ? 'border-cyan-400 bg-cyan-500/15 shadow-xl ring-2 ring-cyan-400/50'
                     : 'border-[#243042] bg-[#121822] hover:border-[#33425A]'
@@ -413,6 +437,13 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                 <p className="mt-1 text-xs text-zinc-300 leading-relaxed font-normal">
                   Billed monthly at $9.99. No contracts, zero commitments.
                 </p>
+                <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-[#243042]/50">
+                  <span className="text-[11px] text-cyan-400 font-mono-tech">Flexible billing</span>
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 bg-cyan-500/20 px-2.5 py-1 rounded-lg border border-cyan-500/30">
+                    <span>Select &amp; Pay</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </div>
               </button>
             </div>
 
@@ -441,7 +472,7 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
 
           {/* Right Column: Fast Direct-to-Bank Payment Form (7 Columns) */}
           <div className="lg:col-span-7 space-y-4">
-            <div className="rounded-2xl border border-[#222E40] bg-[#0E131C] p-5 sm:p-6 shadow-xl space-y-5">
+            <div id="checkout-form-section" className="rounded-2xl border border-[#222E40] bg-[#0E131C] p-5 sm:p-6 shadow-xl space-y-5">
               <div className="flex items-center justify-between border-b border-[#1E293B] pb-3">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
@@ -473,16 +504,27 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                   <span className="text-zinc-300 font-bold font-mono-tech">Instant Settlement</span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   <button
                     type="button"
                     role="button"
                     disabled={loading}
                     onClick={() => handleExecutePayment('apple_pay')}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-zinc-800 to-zinc-900 hover:from-zinc-700 hover:to-zinc-800 border border-zinc-700 py-3 px-3 text-xs sm:text-sm font-bold text-white shadow-md transition-all active:scale-98 min-h-[48px]"
+                    className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-zinc-800 to-zinc-900 hover:from-zinc-700 hover:to-zinc-800 border border-zinc-700 py-3 px-2 text-xs sm:text-sm font-bold text-white shadow-md transition-all active:scale-98 min-h-[48px]"
                   >
                     <Zap className="h-4 w-4 text-cyan-400" />
-                    <span>1-Click Apple / Google Pay</span>
+                    <span>Apple / Google</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    role="button"
+                    disabled={loading}
+                    onClick={() => handleExecutePayment('upi')}
+                    className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 border border-emerald-600 py-3 px-2 text-xs sm:text-sm font-bold text-white shadow-md shadow-emerald-950/40 transition-all active:scale-98 min-h-[48px]"
+                  >
+                    <Zap className="h-4 w-4 text-emerald-300" />
+                    <span>1-Click UPI</span>
                   </button>
 
                   <button
@@ -490,11 +532,11 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                     role="button"
                     disabled={loading}
                     onClick={() => handleExecutePayment('card')}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-cyan-700 hover:bg-cyan-600 border border-cyan-500/40 py-3 px-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-cyan-900/40 transition-all active:scale-98 min-h-[48px]"
+                    className="flex items-center justify-center gap-1.5 rounded-xl bg-cyan-700 hover:bg-cyan-600 border border-cyan-500/40 py-3 px-2 text-xs sm:text-sm font-bold text-white shadow-md shadow-cyan-900/40 transition-all active:scale-98 min-h-[48px]"
                   >
                     <CreditCard className="h-4 w-4 text-cyan-200" />
                     <span>
-                      1-Click Test Visa (
+                      Test Card (
                       {selectedPlan === 'annual'
                         ? '$79/yr'
                         : selectedPlan === 'biannual'
@@ -509,9 +551,9 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
               {/* Payment Channel Selector */}
               <div>
                 <label className="text-xs font-bold text-zinc-300 uppercase tracking-wider block mb-2 font-mono-tech">
-                  Or Customize Payment Method
+                  Or Select Preferred Payment Gateway
                 </label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   <button
                     type="button"
                     role="button"
@@ -519,14 +561,14 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                       haptics.lightTap();
                       setPaymentMethod('card');
                     }}
-                    className={`flex items-center justify-center gap-2 rounded-xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
+                    className={`flex items-center justify-center gap-1.5 rounded-xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
                       paymentMethod === 'card'
                         ? 'border-cyan-400 bg-cyan-500/20 text-white ring-1 ring-cyan-400'
                         : 'border-[#243042] bg-[#121822] text-zinc-300 hover:text-white'
                     }`}
                   >
-                    <CreditCard className="h-4 w-4" />
-                    <span>Credit / Debit</span>
+                    <CreditCard className="h-4 w-4 text-cyan-400" />
+                    <span>Card</span>
                   </button>
 
                   <button
@@ -536,14 +578,31 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                       haptics.lightTap();
                       setPaymentMethod('apple_pay');
                     }}
-                    className={`flex items-center justify-center gap-2 rounded-xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
+                    className={`flex items-center justify-center gap-1.5 rounded-xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
                       paymentMethod === 'apple_pay'
                         ? 'border-cyan-400 bg-cyan-500/20 text-white ring-1 ring-cyan-400'
                         : 'border-[#243042] bg-[#121822] text-zinc-300 hover:text-white'
                     }`}
                   >
-                    <Zap className="h-4 w-4" />
-                    <span>Apple / Google</span>
+                    <Zap className="h-4 w-4 text-cyan-400" />
+                    <span>Apple / GPay</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    role="button"
+                    onClick={() => {
+                      haptics.lightTap();
+                      setPaymentMethod('upi');
+                    }}
+                    className={`flex items-center justify-center gap-1.5 rounded-xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
+                      paymentMethod === 'upi'
+                        ? 'border-emerald-400 bg-emerald-500/20 text-white ring-1 ring-emerald-400'
+                        : 'border-[#243042] bg-[#121822] text-zinc-300 hover:text-white'
+                    }`}
+                  >
+                    <Zap className="h-4 w-4 text-emerald-400" />
+                    <span>UPI / Apps</span>
                   </button>
 
                   <button
@@ -553,13 +612,13 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                       haptics.lightTap();
                       setPaymentMethod('bank_ach');
                     }}
-                    className={`flex items-center justify-center gap-2 rounded-xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
+                    className={`flex items-center justify-center gap-1.5 rounded-xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
                       paymentMethod === 'bank_ach'
                         ? 'border-cyan-400 bg-cyan-500/20 text-white ring-1 ring-cyan-400'
                         : 'border-[#243042] bg-[#121822] text-zinc-300 hover:text-white'
                     }`}
                   >
-                    <Building2 className="h-4 w-4" />
+                    <Building2 className="h-4 w-4 text-cyan-400" />
                     <span>Bank ACH</span>
                   </button>
                 </div>
@@ -652,6 +711,69 @@ export const PaymentPage: React.FC<PaymentPageProps> = ({
                         className="w-full rounded-xl border border-[#243042] bg-[#0A0E14] px-4 py-3 text-sm font-mono-tech text-white placeholder:text-zinc-500 focus:border-cyan-400 focus:outline-none min-h-[48px]"
                       />
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {paymentMethod === 'upi' && (
+                <div className="rounded-xl border border-emerald-500/30 bg-[#121822] p-5 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-emerald-400">
+                      <Zap className="h-5 w-5" />
+                      <span className="font-bold text-sm text-white">Instant UPI 2.0 Real-Time Settlement</span>
+                    </div>
+                    <span className="rounded-md bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 text-xs text-emerald-300 font-mono-tech font-bold">
+                      Instant &lt; 5s
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-300 leading-relaxed">
+                    Pay through Google Pay, PhonePe, Paytm, BHIM, or any UPI ID. Activates CarAI Pro immediately.
+                  </p>
+
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="text-zinc-300 text-xs font-semibold uppercase tracking-wider font-mono-tech">
+                        Enter UPI ID / Virtual Payment Address
+                      </label>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setUpiId('driver@okhdfcbank')}
+                          className="text-[11px] font-mono-tech text-emerald-400 hover:underline"
+                        >
+                          [GPay]
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setUpiId('carai@ybl')}
+                          className="text-[11px] font-mono-tech text-emerald-400 hover:underline"
+                        >
+                          [PhonePe]
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setUpiId('driver@paytm')}
+                          className="text-[11px] font-mono-tech text-emerald-400 hover:underline"
+                        >
+                          [Paytm]
+                        </button>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <Zap className="absolute left-3.5 top-3.5 h-4 w-4 text-emerald-400" />
+                      <input
+                        type="text"
+                        value={upiId}
+                        onChange={(e) => setUpiId(e.target.value)}
+                        placeholder="yourname@okhdfcbank or mobile@upi"
+                        className="w-full rounded-xl border border-[#243042] bg-[#0A0E14] py-3 pl-10 pr-4 text-sm font-mono-tech text-white placeholder:text-zinc-500 focus:border-emerald-400 focus:outline-none min-h-[48px]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-emerald-500/20 bg-emerald-950/20 p-3 text-xs text-emerald-300 flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                    <span>Instant NPCI gateway connected. Click Authorize below to activate your Pro subscription.</span>
                   </div>
                 </div>
               )}

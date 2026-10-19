@@ -323,7 +323,7 @@ export interface BankTransaction {
   planType: 'pro_annual' | 'pro_biannual' | 'pro_monthly';
   amount: number;
   currency: string;
-  paymentMethod: 'credit_card' | 'bank_ach' | 'apple_pay' | 'google_pay';
+  paymentMethod: 'credit_card' | 'bank_ach' | 'apple_pay' | 'google_pay' | 'upi';
   paymentDetailsMasked: string;
   cardholderName?: string;
   bankSettlementNetwork: string;
@@ -338,7 +338,7 @@ export interface BankTransaction {
 export interface BankCheckoutRequest {
   userId: string;
   planType: 'pro_annual' | 'pro_biannual' | 'pro_monthly';
-  paymentMethod: 'credit_card' | 'bank_ach' | 'apple_pay' | 'google_pay' | 'card';
+  paymentMethod: 'credit_card' | 'bank_ach' | 'apple_pay' | 'google_pay' | 'card' | 'upi';
   cardholderName?: string;
   cardNumber?: string;
   cardExpiry?: string;
@@ -347,6 +347,7 @@ export interface BankCheckoutRequest {
   bankRoutingNumber?: string;
   bankAccountNumber?: string;
   digitalWalletToken?: string;
+  upiId?: string;
 }
 
 export interface SecurityAuditEvent {

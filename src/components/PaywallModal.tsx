@@ -60,7 +60,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
   const [paymentStep, setPaymentStep] = useState<'select' | 'checkout' | 'receipt'>(
     triggerContext?.step === 'checkout' ? 'checkout' : 'select'
   );
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'apple_pay' | 'bank_ach'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'apple_pay' | 'upi' | 'bank_ach'>('card');
   const [cardNumber, setCardNumber] = useState('4000 1234 5678 4242');
   const [cardExpiry, setCardExpiry] = useState('08/28');
   const [cardCvc, setCardCvc] = useState('842');
@@ -68,6 +68,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
   const [cardholderName, setCardholderName] = useState('Alex Vance');
   const [bankRoutingNumber, setBankRoutingNumber] = useState('021000021');
   const [bankAccountNumber, setBankAccountNumber] = useState('9876543210');
+  const [upiId, setUpiId] = useState('driver@okhdfcbank');
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingPhase, setLoadingPhase] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -86,6 +87,13 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
   const trigger = currentContext.trigger || 'manual';
   const isTrialExpired = Boolean(user.trialExpired || currentContext.trialExpired || user.status === 'trial_expired');
 
+  const handleSelectPlanAndCheckout = (plan: 'annual' | 'biannual' | 'monthly') => {
+    haptics.lightTap();
+    setSelectedPlan(plan);
+    setErrorMessage(null);
+    setPaymentStep('checkout');
+  };
+
   const handleQuickFillCard = (type: 'visa' | 'mastercard') => {
     haptics.lightTap();
     if (type === 'visa') {
@@ -101,7 +109,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
     }
   };
 
-  const handleFast1ClickPay = async (overrideMethod?: 'card' | 'apple_pay') => {
+  const handleFast1ClickPay = async (overrideMethod?: 'card' | 'apple_pay' | 'upi') => {
     haptics.mediumSuccess();
     setLoading(true);
     setErrorMessage(null);
@@ -115,11 +123,11 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
         : 'pro_monthly';
 
     try {
-      setTimeout(() => setLoadingPhase('Authorizing Payment Settlement...'), 450);
+      setTimeout(() => setLoadingPhase('Authorizing Instant Settlement...'), 350);
       const checkoutData = {
         userId: user.userId,
         planType,
-        paymentMethod: chosenMethod === 'card' ? 'credit_card' : 'apple_pay',
+        paymentMethod: chosenMethod === 'card' ? 'credit_card' : chosenMethod === 'upi' ? 'upi' : 'apple_pay',
         cardholderName,
         cardNumber,
         cardExpiry,
@@ -127,6 +135,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
         billingZip,
         bankRoutingNumber,
         bankAccountNumber,
+        upiId,
       };
 
       const result = await processDirectBankCheckoutApi(checkoutData as any);
@@ -180,7 +189,14 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
       const checkoutData = {
         userId: user.userId,
         planType,
-        paymentMethod: paymentMethod === 'card' ? 'credit_card' : paymentMethod === 'bank_ach' ? 'bank_ach' : 'apple_pay',
+        paymentMethod:
+          paymentMethod === 'card'
+            ? 'credit_card'
+            : paymentMethod === 'upi'
+            ? 'upi'
+            : paymentMethod === 'bank_ach'
+            ? 'bank_ach'
+            : 'apple_pay',
         cardholderName,
         cardNumber,
         cardExpiry,
@@ -188,6 +204,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
         billingZip,
         bankRoutingNumber,
         bankAccountNumber,
+        upiId,
       };
 
       const result = await processDirectBankCheckoutApi(checkoutData as any);
@@ -451,16 +468,13 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
               ))}
             </div>
 
-            {/* Pricing Plan Selector ($9.99/mo & $79/yr) - Fully Responsive for all mobile screens */}
+            {/* Pricing Plan Selector ($9.99/mo & $79/yr) - Instant 1-Tap Advance to Checkout */}
             <div className="mt-6 space-y-4 relative z-10">
               {/* Annual Plan (Pre-selected default with 3-Day Free Trial) */}
               <button
                 type="button"
-                onClick={() => {
-                  haptics.lightTap();
-                  setSelectedPlan('annual');
-                }}
-                className={`relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full rounded-2xl border p-4 sm:p-6 text-left transition-all min-h-[56px] pt-6 sm:pt-6 ${
+                onClick={() => handleSelectPlanAndCheckout('annual')}
+                className={`relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full rounded-2xl border p-4 sm:p-6 text-left transition-all min-h-[56px] pt-6 sm:pt-6 cursor-pointer active:scale-[0.99] ${
                   selectedPlan === 'annual'
                     ? 'border-cyan-400 bg-cyan-500/15 shadow-xl ring-2 ring-cyan-400/50'
                     : 'border-[#2C3440] bg-[#1A202A] hover:border-[#3A4556]'
@@ -482,20 +496,23 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                   </p>
                 </div>
 
-                <div className="flex sm:flex-col items-baseline sm:items-end justify-between sm:justify-center font-mono-tech shrink-0 pt-2 sm:pt-0 border-t border-[#2C3440]/60 sm:border-t-0">
-                  <span className="text-2xl sm:text-3xl font-bold text-cyan-300">$79.00</span>
-                  <span className="text-xs text-zinc-300"> / year</span>
+                <div className="flex sm:flex-col items-baseline sm:items-end justify-between sm:justify-center font-mono-tech shrink-0 pt-2 sm:pt-0 border-t border-[#2C3440]/60 sm:border-t-0 gap-2">
+                  <div className="text-right">
+                    <span className="text-2xl sm:text-3xl font-bold text-cyan-300">$79.00</span>
+                    <span className="text-xs text-zinc-300"> / year</span>
+                  </div>
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 bg-cyan-500/20 px-2.5 py-1 rounded-lg border border-cyan-500/30">
+                    <span>Select &amp; Pay</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
                 </div>
               </button>
 
               {/* 6 Months Plan ($39.99 / 6 mo) */}
               <button
                 type="button"
-                onClick={() => {
-                  haptics.lightTap();
-                  setSelectedPlan('biannual');
-                }}
-                className={`relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full rounded-2xl border p-4 sm:p-6 text-left transition-all min-h-[56px] ${
+                onClick={() => handleSelectPlanAndCheckout('biannual')}
+                className={`relative flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full rounded-2xl border p-4 sm:p-6 text-left transition-all min-h-[56px] cursor-pointer active:scale-[0.99] ${
                   selectedPlan === 'biannual'
                     ? 'border-cyan-400 bg-cyan-500/15 shadow-xl ring-2 ring-cyan-400/50'
                     : 'border-[#2C3440] bg-[#1A202A] hover:border-[#3A4556]'
@@ -512,20 +529,23 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                     Billed every 6 months at $39.99 ($6.66/mo). High savings with zero long-term contract.
                   </p>
                 </div>
-                <div className="flex sm:flex-col items-baseline sm:items-end justify-between sm:justify-center font-mono-tech shrink-0 pt-2 sm:pt-0 border-t border-[#2C3440]/60 sm:border-t-0">
-                  <span className="text-2xl sm:text-3xl font-bold text-cyan-200">$39.99</span>
-                  <span className="text-xs text-zinc-300"> / 6 mo</span>
+                <div className="flex sm:flex-col items-baseline sm:items-end justify-between sm:justify-center font-mono-tech shrink-0 pt-2 sm:pt-0 border-t border-[#2C3440]/60 sm:border-t-0 gap-2">
+                  <div className="text-right">
+                    <span className="text-2xl sm:text-3xl font-bold text-cyan-200">$39.99</span>
+                    <span className="text-xs text-zinc-300"> / 6 mo</span>
+                  </div>
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 bg-cyan-500/20 px-2.5 py-1 rounded-lg border border-cyan-500/30">
+                    <span>Select &amp; Pay</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
                 </div>
               </button>
 
               {/* Monthly Plan ($9.99/mo) */}
               <button
                 type="button"
-                onClick={() => {
-                  haptics.lightTap();
-                  setSelectedPlan('monthly');
-                }}
-                className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full rounded-2xl border p-4 sm:p-6 text-left transition-all min-h-[56px] ${
+                onClick={() => handleSelectPlanAndCheckout('monthly')}
+                className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full rounded-2xl border p-4 sm:p-6 text-left transition-all min-h-[56px] cursor-pointer active:scale-[0.99] ${
                   selectedPlan === 'monthly'
                     ? 'border-cyan-400 bg-cyan-500/15 shadow-xl ring-2 ring-cyan-400/50'
                     : 'border-[#2C3440] bg-[#1A202A] hover:border-[#3A4556]'
@@ -537,9 +557,15 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                     Billed monthly at $9.99. No contracts, cancel whenever you like.
                   </p>
                 </div>
-                <div className="flex sm:flex-col items-baseline sm:items-end justify-between sm:justify-center font-mono-tech shrink-0 pt-2 sm:pt-0 border-t border-[#2C3440]/60 sm:border-t-0">
-                  <span className="text-2xl sm:text-3xl font-bold text-zinc-100">$9.99</span>
-                  <span className="text-xs text-zinc-300"> / month</span>
+                <div className="flex sm:flex-col items-baseline sm:items-end justify-between sm:justify-center font-mono-tech shrink-0 pt-2 sm:pt-0 border-t border-[#2C3440]/60 sm:border-t-0 gap-2">
+                  <div className="text-right">
+                    <span className="text-2xl sm:text-3xl font-bold text-zinc-100">$9.99</span>
+                    <span className="text-xs text-zinc-300"> / month</span>
+                  </div>
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300 bg-cyan-500/20 px-2.5 py-1 rounded-lg border border-cyan-500/30">
+                    <span>Select &amp; Pay</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
                 </div>
               </button>
             </div>
@@ -552,7 +578,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                   <Zap className="h-4 w-4 text-cyan-400 shrink-0" />
                   <span className="font-bold">⚡ EXPRESS 1-CLICK PAY (&lt; 15 SECONDS)</span>
                 </div>
-                <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
                   <button
                     type="button"
                     disabled={loading}
@@ -565,11 +591,20 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                   <button
                     type="button"
                     disabled={loading}
+                    onClick={() => handleFast1ClickPay('upi')}
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 border border-emerald-600 px-3 py-2 text-xs font-bold text-white min-h-[44px]"
+                  >
+                    <Zap className="h-3.5 w-3.5 text-emerald-400" />
+                    <span>Instant UPI</span>
+                  </button>
+                  <button
+                    type="button"
+                    disabled={loading}
                     onClick={() => handleFast1ClickPay('card')}
                     className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 rounded-xl bg-cyan-700 hover:bg-cyan-600 border border-cyan-500/50 px-3 py-2 text-xs font-bold text-white min-h-[44px]"
                   >
                     <CreditCard className="h-3.5 w-3.5 text-cyan-200" />
-                    <span>Instant Card Pay</span>
+                    <span>Card ($79/yr)</span>
                   </button>
                 </div>
               </div>
@@ -665,43 +700,56 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
             {/* Payment Method Selector */}
             <div>
               <label className="text-xs font-bold text-zinc-200 uppercase tracking-wider">Payment Method</label>
-              <div className="mt-2 grid grid-cols-3 gap-2">
+              <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('card')}
-                  className={`flex items-center justify-center gap-2 rounded-2xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
+                  className={`flex items-center justify-center gap-1.5 rounded-2xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
                     paymentMethod === 'card'
                       ? 'border-cyan-400 bg-cyan-500/20 text-white ring-1 ring-cyan-400'
                       : 'border-[#2C3440] bg-[#1A202A] text-zinc-300 hover:text-white'
                   }`}
                 >
-                  <CreditCard className="h-4 w-4" />
-                  <span>Credit / Debit</span>
+                  <CreditCard className="h-4 w-4 text-cyan-400" />
+                  <span>Card</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('apple_pay')}
-                  className={`flex items-center justify-center gap-2 rounded-2xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
+                  className={`flex items-center justify-center gap-1.5 rounded-2xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
                     paymentMethod === 'apple_pay'
                       ? 'border-cyan-400 bg-cyan-500/20 text-white ring-1 ring-cyan-400'
                       : 'border-[#2C3440] bg-[#1A202A] text-zinc-300 hover:text-white'
                   }`}
                 >
-                  <Zap className="h-4 w-4" />
-                  <span>Apple / Google</span>
+                  <Zap className="h-4 w-4 text-cyan-400" />
+                  <span>Apple / GPay</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('upi')}
+                  className={`flex items-center justify-center gap-1.5 rounded-2xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
+                    paymentMethod === 'upi'
+                      ? 'border-emerald-400 bg-emerald-500/20 text-white ring-1 ring-emerald-400'
+                      : 'border-[#2C3440] bg-[#1A202A] text-zinc-300 hover:text-white'
+                  }`}
+                >
+                  <Zap className="h-4 w-4 text-emerald-400" />
+                  <span>UPI Apps</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('bank_ach')}
-                  className={`flex items-center justify-center gap-2 rounded-2xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
+                  className={`flex items-center justify-center gap-1.5 rounded-2xl border py-3 text-xs sm:text-sm font-bold transition-all min-h-[48px] ${
                     paymentMethod === 'bank_ach'
                       ? 'border-cyan-400 bg-cyan-500/20 text-white ring-1 ring-cyan-400'
                       : 'border-[#2C3440] bg-[#1A202A] text-zinc-300 hover:text-white'
                   }`}
                 >
-                  <Building2 className="h-4 w-4" />
+                  <Building2 className="h-4 w-4 text-cyan-400" />
                   <span>Bank ACH</span>
                 </button>
               </div>
@@ -805,6 +853,66 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
                     className="mt-1.5 w-full rounded-2xl border border-[#2C3440] bg-[#0E1116] px-4 py-3 text-sm font-mono-tech text-white placeholder:text-zinc-400 focus:border-cyan-400 focus:outline-none min-h-[48px]"
                     required
                   />
+                </div>
+              </div>
+            ) : paymentMethod === 'upi' ? (
+              <div className="rounded-2xl border border-emerald-500/30 bg-[#1A202A] p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <Zap className="h-5 w-5" />
+                    <span className="font-display text-base font-bold text-white">Instant UPI 2.0 Settlement</span>
+                  </div>
+                  <span className="rounded-lg bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-0.5 text-xs font-mono-tech text-emerald-300 font-bold">
+                    NPCI Verified
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed font-normal">
+                  Pay instantly using Google Pay, PhonePe, Paytm, BHIM, or any UPI app. Instant activation in under 5 seconds.
+                </p>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-bold text-zinc-300 uppercase tracking-wider">Your UPI ID / VPA</label>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setUpiId('driver@okhdfcbank')}
+                        className="text-[11px] font-mono-tech text-emerald-400 hover:underline"
+                      >
+                        [GPay]
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUpiId('carai@ybl')}
+                        className="text-[11px] font-mono-tech text-emerald-400 hover:underline"
+                      >
+                        [PhonePe]
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setUpiId('driver@paytm')}
+                        className="text-[11px] font-mono-tech text-emerald-400 hover:underline"
+                      >
+                        [Paytm]
+                      </button>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <Zap className="absolute left-4 top-3.5 h-5 w-5 text-emerald-400" />
+                    <input
+                      type="text"
+                      value={upiId}
+                      onChange={(e) => setUpiId(e.target.value)}
+                      placeholder="username@bank or mobile@upi"
+                      className="w-full rounded-2xl border border-[#2C3440] bg-[#0E1116] py-3 pl-12 pr-4 text-sm font-mono-tech text-white placeholder:text-zinc-500 focus:border-emerald-400 focus:outline-none min-h-[48px]"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-950/20 p-3 text-xs text-emerald-300 flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                  <span>Real-time VPA verification active. Tap Authorize below to complete instant debit.</span>
                 </div>
               </div>
             ) : paymentMethod === 'bank_ach' ? (
