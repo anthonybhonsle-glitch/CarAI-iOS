@@ -6,9 +6,6 @@ workflows:
     integrations:
       app_store_connect: Apple App Store Key
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.carai.mechanicpro
       node: 22
       xcode: latest
       cocoapods: default
@@ -33,12 +30,15 @@ workflows:
       - name: Set dynamic build version
         script: |
           cd ios/App
-          # Automatically assign unique build number so Apple accepts every upload
           agvtool new-version -all ${BUILD_NUMBER:-1} || true
           cd ../..
-      - name: Set up code signing settings on Xcode project
+      - name: Initialize keychain and auto-create Apple signing certificates & profile
         script: |
           set -e
+          keychain initialize
+          app-store-connect fetch-signing-files "com.carai.mechanicpro" \
+            --type IOS_APP_STORE \
+            --create
           xcode-project use-profiles
       - name: Build iOS Application (App Store Signed IPA)
         script: |
