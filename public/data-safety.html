@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Safety Specification - CarAI Pro (com.carai.mechanicpro)</title>
+  <meta name="description" content="Google Play Data Safety Section Disclosures for CarAI Pro.">
+  <style>
+    :root {
+      --bg: #0B131E;
+      --card-bg: #141D2B;
+      --card-border: #223247;
+      --primary: #00D2FF;
+      --text-main: #E2E8F0;
+      --text-heading: #FFFFFF;
+      --success: #10B981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      color: var(--text-main);
+      background-color: var(--bg);
+      padding: 24px 16px;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 36px 32px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    h1 { color: var(--text-heading); font-size: 26px; font-weight: 800; margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 16px; }
+    h2 { color: #38BDF8; font-size: 18px; font-weight: 700; margin-top: 26px; margin-bottom: 8px; }
+    p, li { font-size: 14.5px; margin-bottom: 10px; }
+    ul { padding-left: 20px; margin-bottom: 14px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13.5px; }
+    th, td { border: 1px solid var(--card-border); padding: 10px 12px; text-align: left; }
+    th { background: #0F172A; color: #38BDF8; }
+    tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 16px; }
+    .footer-links { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--card-border); display: flex; gap: 16px; font-size: 13px; }
+    .footer-links a { color: #38BDF8; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <span class="badge">Google Play Data Safety Section Specification</span>
+    <h1>Data Safety &amp; Security Specification</h1>
+    <p><strong>App:</strong> CarAI - OBD-II Diagnostics &amp; AI Customization (<code>com.carai.mechanicpro</code>)</p>
+    <p><strong>Developer:</strong> Anthony Bhonsle (<a href="mailto:anthonybhonsle@gmail.com" style="color:#38BDF8;">anthonybhonsle@gmail.com</a>)</p>
+
+    <h2>Data Encryption in Transit</h2>
+    <p>All network communications between the mobile application and our backend endpoints are encrypted via industry-standard TLS 1.3 / AES-256 encryption. Plaintext HTTP traffic is rejected.</p>
+
+    <h2>Data Safety Questionnaire Reference Guide for Play Console</h2>
+    <p>Use this exact table when completing the Google Play Console Data Safety questionnaire under <em>Policy &rarr; App Content &rarr; Data Safety</em>:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Data Category</th>
+          <th>Collected?</th>
+          <th>Shared with 3rd Parties?</th>
+          <th>Ephemeral?</th>
+          <th>Purpose in Play Console</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Diagnostics &amp; Performance</strong> (PIDs, DTCs)</td>
+          <td>Processed locally</td>
+          <td>No</td>
+          <td>Yes (session based)</td>
+          <td>App functionality, analytics</td>
+        </tr>
+        <tr>
+          <td><strong>Location (GPS / Travel path)</strong></td>
+          <td>No</td>
+          <td>No</td>
+          <td>N/A</td>
+          <td>Not collected</td>
+        </tr>
+        <tr>
+          <td><strong>Audio / Microphone</strong></td>
+          <td>Processed in RAM</td>
+          <td>No</td>
+          <td>Yes (RAM only)</td>
+          <td>Acoustic engine diagnosis</td>
+        </tr>
+        <tr>
+          <td><strong>Personal Info (Phone / Email)</strong></td>
+          <td>Yes (Optional)</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Account management &amp; authentication</td>
+        </tr>
+        <tr>
+          <td><strong>Financial Info</strong></td>
+          <td>Tokenized gateway</td>
+          <td>No</td>
+          <td>N/A</td>
+          <td>Purchase / In-app subscription</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer-links">
+      <a href="/">&larr; Return to App</a>
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/delete-account.html">Data Deletion</a>
+    </div>
+  </div>
+</body>
+</html>

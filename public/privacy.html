@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - CarAI Pro: OBD-II Diagnostics & AI Mechanic</title>
+  <meta name="description" content="Official Google Play User Data Privacy Policy for CarAI - OBD-II Diagnostics & AI Customization (com.carai.mechanicpro).">
+  <style>
+    :root {
+      --bg: #0B131E;
+      --card-bg: #141D2B;
+      --card-border: #223247;
+      --primary: #00D2FF;
+      --primary-accent: #0EA5E9;
+      --text-main: #E2E8F0;
+      --text-muted: #94A3B8;
+      --text-heading: #FFFFFF;
+      --success: #10B981;
+      --warning: #F59E0B;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      color: var(--text-main);
+      background-color: var(--bg);
+      padding: 24px 16px;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 36px 32px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    @media (max-width: 640px) {
+      .wrapper { padding: 24px 18px; border-radius: 14px; }
+    }
+    .badge-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .badge-primary { background: rgba(0, 210, 255, 0.15); color: #38BDF8; border: 1px solid rgba(0, 210, 255, 0.3); }
+    .badge-success { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    
+    h1 {
+      color: var(--text-heading);
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 16px;
+    }
+    h2 {
+      color: #38BDF8;
+      font-size: 19px;
+      font-weight: 700;
+      margin-top: 28px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    h3 {
+      color: var(--text-heading);
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+    p, li {
+      font-size: 14.5px;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+    ul, ol {
+      padding-left: 22px;
+      margin-bottom: 14px;
+    }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: rgba(0, 0, 0, 0.4);
+      color: #7DD3FC;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .meta-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 18px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 600px) {
+      .meta-box { grid-template-columns: 1fr; }
+    }
+    .meta-item span {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .meta-item strong {
+      font-size: 14px;
+      color: var(--text-heading);
+    }
+    .notice-box {
+      background: rgba(16, 185, 129, 0.08);
+      border-left: 4px solid var(--success);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 18px 0;
+      font-size: 14px;
+    }
+    .alert-box {
+      background: rgba(245, 158, 11, 0.08);
+      border-left: 4px solid var(--warning);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 18px 0;
+      font-size: 14px;
+    }
+    .contact-card {
+      background: #0F172A;
+      border: 1px solid #38BDF8;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+    .contact-card a {
+      color: #38BDF8;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .contact-card a:hover {
+      text-decoration: underline;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13.5px;
+    }
+    th, td {
+      border: 1px solid var(--card-border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th {
+      background: #0F172A;
+      color: #38BDF8;
+      font-weight: 700;
+    }
+    tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .footer-links {
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .footer-links a {
+      color: #38BDF8;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="badge-bar">
+      <span class="badge badge-primary">Google Play User Data Policy Compliant</span>
+      <span class="badge badge-success">GDPR &amp; CCPA Ready</span>
+      <span class="badge badge-primary">Zero Data Resale Guarantee</span>
+    </div>
+
+    <h1>Privacy Policy</h1>
+
+    <div class="meta-box">
+      <div class="meta-item">
+        <span>Application Name</span>
+        <strong>CarAI - OBD-II Diagnostics &amp; AI Customization</strong>
+      </div>
+      <div class="meta-item">
+        <span>Package Name</span>
+        <strong><code>com.carai.mechanicpro</code></strong>
+      </div>
+      <div class="meta-item">
+        <span>Developer Entity</span>
+        <strong>Anthony Bhonsle</strong>
+      </div>
+      <div class="meta-item">
+        <span>Developer Contact</span>
+        <strong><a href="mailto:anthonybhonsle@gmail.com" style="color:#38BDF8;">anthonybhonsle@gmail.com</a></strong>
+      </div>
+      <div class="meta-item">
+        <span>Effective &amp; Last Updated Date</span>
+        <strong>October 2026</strong>
+      </div>
+      <div class="meta-item">
+        <span>Policy Jurisdiction</span>
+        <strong>Global (Google Play Store Worldwide)</strong>
+      </div>
+    </div>
+
+    <h2>1. Introduction &amp; Scope</h2>
+    <p>
+      This Privacy Policy governs the access, collection, processing, and handling of user data by 
+      <strong>CarAI - OBD-II Diagnostics &amp; AI Customization</strong> (also referenced as <strong>Car AI - Mechanic &amp; OBDScanner</strong> or <strong>CarAI Pro</strong>, Package ID: <code>com.carai.mechanicpro</code>), developed and operated by <strong>Anthony Bhonsle</strong> ("we", "our", or "us").
+    </p>
+    <p>
+      We value your trust and are fully committed to protecting your privacy in strict accordance with the <strong>Google Play Developer Program Policies (specifically the User Data Policy)</strong>, GDPR, CCPA, and global data protection regulations. This document clearly articulates what data we access, how it is used, how it is secured, and your rights to inspect and purge your personal information.
+    </p>
+
+    <div class="notice-box">
+      <strong>Zero Data Resale &amp; Advertising Guarantee:</strong><br>
+      We do <strong>NOT</strong> sell, trade, rent, monetize, or broker your personal data, diagnostic trouble codes, or vehicle driving telemetry to third-party data brokers, insurers, or advertising networks. All diagnostic computations are made exclusively to provide mechanical insights to you, the vehicle owner.
+    </div>
+
+    <h2>2. Data We Collect &amp; How It Is Used</h2>
+    <p>We believe in strict data minimization. We only access the minimal technical telemetry necessary to deliver real-time automotive diagnostics, mechanical repair estimations, and account synchronization.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Data Category</th>
+          <th>Specific Elements</th>
+          <th>Processing Method</th>
+          <th>Purpose &amp; Justification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Vehicle Diagnostic Telemetry</strong></td>
+          <td>Engine RPM, Vehicle Speed, Coolant Temp, Throttle Position, Fuel Rail Pressure, Diagnostic Trouble Codes (DTCs), MIL Status, Freeze Frames, I/M Smog Readiness Monitors.</td>
+          <td>Processed locally in volatile RAM on your mobile device via Bluetooth/WiFi ELM327 OBD-II adapter.</td>
+          <td>Real-time HUD gauges, fault code explanations, mechanical health scoring, and repair cost estimations.</td>
+        </tr>
+        <tr>
+          <td><strong>Acoustic / Harmonic Engine Audio</strong></td>
+          <td>Frequency spectrum readings captured when you activate the acoustic harmonic diagnostic inspection tool.</td>
+          <td>Ephemeral processing on-device in real-time RAM. Audio is <strong>NEVER</strong> saved to disk, uploaded, or transmitted off-device.</td>
+          <td>Acoustic frequency analysis to detect mechanical rod knock, valve train tapping, or exhaust leaks.</td>
+        </tr>
+        <tr>
+          <td><strong>Account &amp; Driver Identity</strong></td>
+          <td>Mobile phone number, Country Code, and optional Email / Name when you voluntarily register or verify via SMS OTP.</td>
+          <td>Encrypted transmission over TLS 1.3 / AES-256 to our secure backend vault.</td>
+          <td>Driver authentication, garage vehicle profiles backup, and cross-device Pro subscription entitlement sync.</td>
+        </tr>
+        <tr>
+          <td><strong>Financial &amp; In-App Billing</strong></td>
+          <td>Payment token, subscription plan status, transaction identifier, order timestamp.</td>
+          <td>Handled directly through verified PCI-DSS Level 1 payment processors and Google Play Billing.</td>
+          <td>Processing subscriptions (CarAI Pro Monthly, 6-Month, Annual) and complimentary trials. No raw credit card or bank PIN numbers are stored on our servers.</td>
+        </tr>
+        <tr>
+          <td><strong>Technical App Diagnostics</strong></td>
+          <td>Anonymous OS version, device model, crash stack traces, cold-start latency.</td>
+          <td>Aggregated and anonymized.</td>
+          <td>Application stability, crash mitigation, and bug resolution.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>3. Android Device Permissions &amp; Technical Disclosures</h2>
+    <p>In accordance with Google Play's Prominent Disclosure and Consent requirements, our app requests the following system permissions solely to perform designated automotive functions:</p>
+    <ul>
+      <li>
+        <strong>Bluetooth Permissions (<code>BLUETOOTH_CONNECT</code>, <code>BLUETOOTH_SCAN</code>, <code>BLUETOOTH_ADMIN</code>):</strong><br>
+        Required to search for, pair with, and maintain serial data communication with your wireless ELM327 / OBDLink Bluetooth vehicle diagnostic dongle plugged into your car's OBD-II port. 
+        <em>Bluetooth is never used to track physical user location.</em>
+      </li>
+      <li>
+        <strong>Location Permission (<code>ACCESS_FINE_LOCATION</code> / <code>ACCESS_COARSE_LOCATION</code> on legacy Android):</strong><br>
+        On Android versions 11 and earlier, Android system architecture grouped Bluetooth Low Energy (BLE) scanning under location permissions. Our app does <strong>NOT</strong> record, log, trace, or upload your physical GPS coordinates or travel history.
+      </li>
+      <li>
+        <strong>Microphone Permission (<code>RECORD_AUDIO</code>):</strong><br>
+        Requested only when you explicitly launch the engine sound diagnostic module. Audio samples are analyzed in volatile memory for harmonic sound peak detection and are <strong>immediately discarded</strong> upon completion of the test.
+      </li>
+      <li>
+        <strong>Notification Permission (<code>POST_NOTIFICATIONS</code>):</strong><br>
+        Used to alert drivers to critical mechanical anomalies (e.g., Engine Coolant &gt; 108&deg;C, Low DEF/AdBlue levels) and subscription status receipts. You can disable notifications at any time in Android Settings.
+      </li>
+      <li>
+        <strong>Internet Access (<code>INTERNET</code>, <code>ACCESS_NETWORK_STATE</code>):</strong><br>
+        Required to fetch AI mechanical fault code definitions, vehicle maintenance recall bulletins, regional repair labor cost tables, and manage authentication.
+      </li>
+    </ul>
+
+    <h2>4. Third-Party Service Providers &amp; SDK Disclosures</h2>
+    <p>We work with trusted industry-standard infrastructure providers that adhere to rigorous data protection standards:</p>
+    <ul>
+      <li><strong>Google Play Services:</strong> Core application distribution, in-app purchases, licensing, and security integrity.</li>
+      <li><strong>Google Gemini AI API:</strong> Diagnostic explanation parsing and repair guidance. Diagnostic requests are routed server-side; <em>no personally identifiable user records, phone numbers, or vehicle VINs are used to train public foundation models</em>.</li>
+      <li><strong>Payment Gateways (Google Play In-App Billing / Bank Aggregators):</strong> Secure, PCI-compliant processing of digital subscriptions.</li>
+    </ul>
+
+    <h2>5. Data Retention Policy</h2>
+    <p>We retain user information only for as long as necessary to fulfill the operational purposes described in this policy:</p>
+    <ul>
+      <li><strong>Live OBD-II Telemetry:</strong> Discarded immediately after your driving session ends, unless you voluntarily save a maintenance log to your garage.</li>
+      <li><strong>Acoustic Audio Samples:</strong> Discarded in real time. Zero persistence.</li>
+      <li><strong>Account &amp; Driver Profiles:</strong> Retained while your account is active. Upon receipt of a deletion request, all cloud profiles, vehicle nicknames, and stored maintenance logs are permanently erased within <strong>72 hours</strong>.</li>
+    </ul>
+
+    <h2>6. Dedicated User Data Deletion Mechanism (Google Play Requirement)</h2>
+    <p>
+      In accordance with Google Play's Data Deletion Policy, users have an absolute right to permanently purge their account and all associated telemetry. You do not need to keep the app installed to exercise this right.
+    </p>
+    <div class="notice-box">
+      <strong>How to Delete Your Account &amp; Data:</strong><br>
+      1. <strong>In-App Self-Serve:</strong> Navigate to <em>Settings &rarr; Legal &amp; Compliance &rarr; Data Deletion</em> and click <strong>"Submit 72-Hour Data Purge Request"</strong>.<br>
+      2. <strong>Dedicated Web Form:</strong> Visit our publicly accessible deletion portal at <a href="/delete-account.html" style="color:#38BDF8; font-weight:700;">https://ais-pre-ihdwobujwxygqfehu455nm-458379533525.asia-southeast1.run.app/delete-account.html</a>.<br>
+      3. <strong>Direct Email Request:</strong> Send an email with subject line <em>"Account Deletion Request"</em> to <a href="mailto:anthonybhonsle@gmail.com" style="color:#38BDF8;">anthonybhonsle@gmail.com</a>. All personal telemetry is wiped within 72 hours of verification.
+    </div>
+
+    <h2>7. Security &amp; Encryption Safeguards</h2>
+    <p>
+      We maintain rigorous technical and administrative security safeguards to protect your data. All communication between the mobile app and our servers is encrypted using <strong>TLS 1.3 / AES-256 GCM</strong> encryption. We enforce strict role-based access control, automated vulnerability scanning, and secure tokenization.
+    </p>
+
+    <h2>8. Children's Privacy (COPPA Compliance)</h2>
+    <p>
+      Our application is specifically designed for motor vehicle drivers, automotive enthusiasts, and certified mechanics. We do not knowingly solicit or collect personal information from individuals under the age of 13 (or under 16 in the European Union). If we discover that a minor has provided us with personal data, we will immediately delete that information from our records.
+    </p>
+
+    <h2>9. Updates &amp; Amendments to this Policy</h2>
+    <p>
+      We may periodically update this Privacy Policy to reflect enhancements in our vehicle diagnostic features or modifications in Google Play policies. In the event of material changes, we will provide a prominent in-app notification prior to the change taking effect.
+    </p>
+
+    <h2>10. Developer Contact &amp; Data Protection Officer</h2>
+    <div class="contact-card">
+      <h3 style="margin-top:0; color:#38BDF8;">Official Developer Support</h3>
+      <p style="margin-bottom:6px;"><strong>Lead Developer:</strong> Anthony Bhonsle</p>
+      <p style="margin-bottom:6px;"><strong>Application:</strong> CarAI - OBD-II Diagnostics &amp; AI Customization (<code>com.carai.mechanicpro</code>)</p>
+      <p style="margin-bottom:6px;"><strong>Support &amp; Privacy Email:</strong> <a href="mailto:anthonybhonsle@gmail.com">anthonybhonsle@gmail.com</a></p>
+      <p style="margin-bottom:0;"><strong>Support Response Window:</strong> Within 24&ndash;48 business hours</p>
+    </div>
+
+    <div class="footer-links">
+      <a href="/">&larr; Return to CarAI Application</a>
+      <a href="/terms.html">Terms of Service &amp; Subscriptions</a>
+      <a href="/data-safety.html">Data Safety Specification</a>
+      <a href="/delete-account.html">Account &amp; Data Deletion Request</a>
+    </div>
+  </div>
+</body>
+</html>

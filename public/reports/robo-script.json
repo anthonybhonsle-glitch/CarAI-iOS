@@ -1,0 +1,71 @@
+[
+  {
+    "crawlSettings": {
+      "packageName": "com.carai.mechanicpro",
+      "versionCode": 204,
+      "versionName": "2.4.0",
+      "maxDepth": 8,
+      "maxSteps": 120,
+      "crawlDurationSeconds": 180
+    },
+    "testCredentials": {
+      "loginPathRegex": ".*auth.*|.*login.*",
+      "usernameElement": "input-email-auth",
+      "usernameValue": "play-tester@carai.pro",
+      "passwordElement": "input-password-auth",
+      "passwordValue": "PlayTest2026!Secure",
+      "submitElement": "btn-submit-auth"
+    },
+    "deepLinks": [
+      "carai://flagship",
+      "carai://gauges",
+      "carai://diagnostics",
+      "carai://customizer",
+      "carai://payment",
+      "carai://privacy?tab=faq"
+    ],
+    "actions": [
+      {
+        "eventType": "VIEW_CLICKED",
+        "description": "Dismiss initial welcome/permission prompt if present",
+        "elementDescriptors": [
+          { "className": "android.widget.Button", "text": "Allow" },
+          { "className": "android.widget.Button", "text": "While using the app" }
+        ]
+      },
+      {
+        "eventType": "VIEW_CLICKED",
+        "description": "Open live gauges dashboard",
+        "elementDescriptors": [
+          { "resourceName": "nav-tab-gauges" }
+        ]
+      },
+      {
+        "eventType": "VIEW_CLICKED",
+        "description": "Trigger simulated CAN-Bus diagnostic scan",
+        "elementDescriptors": [
+          { "resourceName": "btn-start-dtc-scan" }
+        ]
+      },
+      {
+        "eventType": "VIEW_CLICKED",
+        "description": "Verify Google Play Billing paywall modal handles back key cleanly",
+        "elementDescriptors": [
+          { "resourceName": "btn-open-paywall-modal" }
+        ]
+      },
+      {
+        "eventType": "KEY_EVENT",
+        "keyCode": 4,
+        "description": "Press System Back Button to verify dismissibility"
+      },
+      {
+        "eventType": "VIEW_CLICKED",
+        "description": "Navigate to Privacy Policy & Developer FAQ",
+        "elementDescriptors": [
+          { "resourceName": "btn-footer-faq" }
+        ]
+      }
+    ]
+  }
+]

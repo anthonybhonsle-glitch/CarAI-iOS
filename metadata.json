@@ -1,0 +1,6 @@
+{
+  "name": "CarAI - OBD-II Diagnostics & AI Customization",
+  "description": "Diagnose car problems with OBD-II, live data, AI fault insights and repair costs.",
+  "requestFramePermissions": ["bluetooth", "serial", "usb"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+@theme {
+  --color-carai-bg: #0B1F2E;
+  --color-carai-surface: #12293B;
+  --color-carai-cyan: #00D1FF;
+  --color-carai-teal: #13C2A3;
+  --color-carai-amber: #FFB020;
+  --color-carai-red: #FF4D4F;
+  --color-carai-text: #EAF6FF;
+  --color-carai-muted: #9FB6C8;
+}
+
+@layer base {
+  :root { color-scheme: dark; }
+
+  html, body, #root {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: #0B1F2E;
+    color: #EAF6FF;
+  }
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body {
+    font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Devanagari', sans-serif;
+    background-color: #0B1F2E;
+    color: #EAF6FF;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  *, *::before, *::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button {
+    cursor: pointer;
+  }
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.font-display {
+  font-family: 'Chakra Petch', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.font-mono-tech {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -0.02em;
+}
+
+/* Accessible typography hierarchy with WCAG AA compliant sizing */
+.text-headline-xl {
+  font-size: 1.5rem;
+  line-height: 1.875rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+}
+
+.text-headline-lg {
+  font-size: 1.25rem;
+  line-height: 1.625rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #FFFFFF;
+}
+
+.text-headline-md {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.text-body-lead {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #E2E8F0;
+}
+
+.text-body-regular {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #CBD5E1;
+}
+
+.text-body-muted {
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: #94A3B8;
+}
+
+.text-caption {
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  font-weight: 600;
+  color: #94A3B8;
+}
+
+/* Touch-optimized button base (Google Play & WCAG 48dp guideline) */
+.touch-target {
+  min-height: 48px;
+  min-width: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0C10;
+}
+::-webkit-scrollbar-thumb {
+  background: #2C323D;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3F4756;
+}
+
+/* Safe area padding for mobile notches and gesture bars */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+}
+
+/* Carbon & Gauge Accents for Automotive Dark */
+.carbon-pattern {
+  background-color: #0A0C10;
+  background-image: radial-gradient(#1E232B 1.5px, transparent 1.5px), radial-gradient(#1E232B 1.5px, #0A0C10 1.5px);
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+}
+
+.elegant-card {
+  background-color: #13171D;
+  border: 1px solid #282F3A;
+}
+
+.elegant-card:hover {
+  border-color: #3B4554;
+}
+
+.elegant-subcard {
+  background-color: #1A1F27;
+  border: 1px solid #2F3744;
+}

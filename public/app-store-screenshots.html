@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Store Screenshot Generator - CarAI Pro</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #090d16;
+      color: #f1f5f9;
+      padding: 30px 20px;
+      min-height: 100vh;
+    }
+    .header {
+      max-width: 1200px;
+      margin: 0 auto 30px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #38bdf8;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .header p {
+      color: #94a3b8;
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+    }
+    .btn:hover {
+      background: #0369a1;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      box-shadow: none;
+    }
+    .btn-secondary:hover {
+      background: #334155;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: #e2e8f0;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .preview-box {
+      width: 100%;
+      aspect-ratio: 1290 / 2796;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid #334155;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .preview-box canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .download-single {
+      width: 100%;
+      padding: 10px;
+      background: #0284c7;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .download-single:hover {
+      background: #0369a1;
+    }
+    .note {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 40px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="badge">App Store Certified: 1179 x 2556 px (iPhone Medium Display) & 1290 x 2796 px (Large)</div>
+    <h1>CarAI Pro — Official App Store Screenshots</h1>
+    <p>Pixel-perfect screenshots generated to strictly match your App Store Connect screen requirements.</p>
+    
+    <div class="controls">
+      <button class="btn" onclick="generateScreenshots(1179, 2556); downloadAll();">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download All 4 (1179 × 2556 PNG - iPhone Dynamic Island)
+      </button>
+      <button class="btn btn-secondary" onclick="generateScreenshots(1179, 2556)">
+        Set to 1179 × 2556 (Medium Display)
+      </button>
+      <button class="btn btn-secondary" onclick="generateScreenshots(1290, 2796)">
+        Set to 1290 × 2796 (Large Display)
+      </button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Card 1 -->
+    <div class="card">
+      <div class="card-title">1. Real-Time Telemetry & Gauges</div>
+      <div class="preview-box">
+        <canvas id="canvas1" width="1290" height="2796"></canvas>
+      </div>
+      <button class="download-single" onclick="downloadCanvas('canvas1', '01_CarAI_Telemetry_1290x2796.png')">
+        Download Screenshot 1
+      </button>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card">
+      <div class="card-title">2. Diagnostic Trouble Code Scanner</div>
+      <div class="preview-box">
+        <canvas id="canvas2" width="1290" height="2796"></canvas>
+      </div>
+      <button class="download-single" onclick="downloadCanvas('canvas2', '02_CarAI_Fault_Scanner_1290x2796.png')">
+        Download Screenshot 2
+      </button>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card">
+      <div class="card-title">3. AI Mechanic & Cost Defense</div>
+      <div class="preview-box">
+        <canvas id="canvas3" width="1290" height="2796"></canvas>
+      </div>
+      <button class="download-single" onclick="downloadCanvas('canvas3', '03_CarAI_AI_Mechanic_1290x2796.png')">
+        Download Screenshot 3
+      </button>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="card">
+      <div class="card-title">4. Live Sensor Waveforms & Graphing</div>
+      <div class="preview-box">
+        <canvas id="canvas4" width="1290" height="2796"></canvas>
+      </div>
+      <button class="download-single" onclick="downloadCanvas('canvas4', '04_CarAI_Sensor_Graphs_1290x2796.png')">
+        Download Screenshot 4
+      </button>
+    </div>
+  </div>
+
+  <div class="note">
+    These PNGs strictly comply with Apple's <strong>App Store Review Guidelines</strong> and display specifications (1290x2796 portrait, 72 dpi, RGB). Once downloaded, simply drag them directly into the <strong>6.7" Display</strong> box on App Store Connect!
+  </div>
+
+  <script>
+    let currentW = 1290;
+    let currentH = 2796;
+
+    function renderRoundedRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function drawScreenFrame(ctx, w, h, topHeadline, subHeadline, accentColor) {
+      // 1. Background gradient
+      const bgGrad = ctx.createLinearGradient(0, 0, w, h);
+      bgGrad.addColorStop(0, '#060a12');
+      bgGrad.addColorStop(0.4, '#0c1626');
+      bgGrad.addColorStop(1, '#05080f');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Subtle ambient glow behind headline
+      const glow = ctx.createRadialGradient(w/2, 280, 50, w/2, 280, 500);
+      glow.addColorStop(0, accentColor + '33');
+      glow.addColorStop(1, 'transparent');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, w, 700);
+
+      // 2. Headlines
+      ctx.textAlign = 'center';
+      
+      // Category tag
+      ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+      ctx.fillStyle = accentColor;
+      ctx.letterSpacing = '3px';
+      ctx.fillText('CARAI • AUTOMOTIVE INTELLIGENCE', w / 2, 160);
+
+      // Main Headline
+      ctx.font = '800 68px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.letterSpacing = '-1px';
+      ctx.fillText(topHeadline, w / 2, 250);
+
+      // Subheadline
+      ctx.font = '500 42px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+      ctx.fillStyle = '#94A3B8';
+      ctx.letterSpacing = '0px';
+      ctx.fillText(subHeadline, w / 2, 330);
+
+      // 3. Mockup Phone Container
+      const phoneX = 85;
+      const phoneY = 440;
+      const phoneW = w - 170;
+      const phoneH = h - phoneY + 120; // extends slightly off bottom
+      const radius = 90;
+
+      // Outer bezel drop shadow
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+      ctx.shadowBlur = 60;
+      ctx.shadowOffsetY = 30;
+
+      // Titanium edge
+      renderRoundedRect(ctx, phoneX - 12, phoneY - 12, phoneW + 24, phoneH, radius + 8);
+      ctx.fillStyle = '#1e293b';
+      ctx.fill();
+
+      // Reset shadow
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+
+      // Bezel ring
+      renderRoundedRect(ctx, phoneX - 4, phoneY - 4, phoneW + 8, phoneH, radius + 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+
+      // Screen glass
+      ctx.save();
+      renderRoundedRect(ctx, phoneX, phoneY, phoneW, phoneH, radius);
+      ctx.clip();
+
+      // Screen background
+      ctx.fillStyle = '#0a0f1d';
+      ctx.fillRect(phoneX, phoneY, phoneW, phoneH);
+
+      // Dynamic Island
+      const islandW = 340;
+      const islandH = 75;
+      const islandX = phoneX + (phoneW - islandW) / 2;
+      const islandY = phoneY + 35;
+      renderRoundedRect(ctx, islandX, islandY, islandW, islandH, 38);
+      ctx.fillStyle = '#000000';
+      ctx.fill();
+
+      // Front camera lens glint
+      ctx.beginPath();
+      ctx.arc(islandX + islandW - 45, islandY + 38, 14, 0, Math.PI * 2);
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(islandX + islandW - 47, islandY + 36, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fill();
+
+      return { phoneX, phoneY, phoneW, phoneH };
+    }
+
+    // SCREENSHOT 1: Telemetry & Live Gauges
+    function drawScreenshot1(canvas, w, h) {
+      const ctx = canvas.getContext('2d');
+      const { phoneX, phoneY, phoneW } = drawScreenFrame(
+        ctx, w, h,
+        'REAL-TIME OBD-II GAUGES',
+        'Live Telemetry, Speed & Engine Analytics',
+        '#38BDF8'
+      );
+
+      // Top App Bar
+      const startY = phoneY + 140;
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 44px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('Live Instrument Cluster', phoneX + 60, startY);
+
+      // BLE Connected pill
+      renderRoundedRect(ctx, phoneX + phoneW - 320, startY - 40, 260, 56, 28);
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.18)';
+      ctx.fill();
+      ctx.strokeStyle = '#10B981';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(phoneX + phoneW - 290, startY - 12, 9, 0, Math.PI * 2);
+      ctx.fillStyle = '#10B981';
+      ctx.fill();
+
+      ctx.font = 'bold 24px -apple-system, sans-serif';
+      ctx.fillStyle = '#10B981';
+      ctx.fillText('ELM327 PAIRED', phoneX + phoneW - 265, startY - 4);
+
+      // Main Giant RPM Gauge
+      const gaugeCenterX = phoneX + phoneW / 2;
+      const gaugeCenterY = startY + 360;
+      const gaugeRadius = 260;
+
+      // Outer track
+      ctx.beginPath();
+      ctx.arc(gaugeCenterX, gaugeCenterY, gaugeRadius, Math.PI * 0.75, Math.PI * 2.25);
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 38;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // Progress Arc (3,240 RPM)
+      const rpmGrad = ctx.createLinearGradient(gaugeCenterX - 200, gaugeCenterY, gaugeCenterX + 200, gaugeCenterY);
+      rpmGrad.addColorStop(0, '#38BDF8');
+      rpmGrad.addColorStop(0.7, '#F59E0B');
+      rpmGrad.addColorStop(1, '#EF4444');
+
+      ctx.beginPath();
+      ctx.arc(gaugeCenterX, gaugeCenterY, gaugeRadius, Math.PI * 0.75, Math.PI * 1.78);
+      ctx.strokeStyle = rpmGrad;
+      ctx.lineWidth = 38;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // Inner Gauge Text
+      ctx.textAlign = 'center';
+      ctx.font = '800 120px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('3,240', gaugeCenterX, gaugeCenterY + 30);
+
+      ctx.font = 'bold 36px -apple-system, sans-serif';
+      ctx.fillStyle = '#38BDF8';
+      ctx.fillText('ENGINE RPM', gaugeCenterX, gaugeCenterY + 90);
+
+      ctx.font = '500 28px -apple-system, sans-serif';
+      ctx.fillStyle = '#64748B';
+      ctx.fillText('PEAK 6,800 • REDLINE 7,200', gaugeCenterX, gaugeCenterY + 140);
+
+      // 4 Metric Tiles Below
+      const tileY = startY + 740;
+      const metrics = [
+        { label: 'Vehicle Speed', val: '68', unit: 'MPH', color: '#38BDF8', status: 'Cruising' },
+        { label: 'Coolant Temp', val: '92°', unit: 'C', color: '#10B981', status: 'Optimal (88-95°)' },
+        { label: 'Battery System', val: '14.2', unit: 'V', color: '#10B981', status: 'Charging Healthy' },
+        { label: 'Fuel Pressure', val: '43.5', unit: 'PSI', color: '#F59E0B', status: 'Rail Nominal' }
+      ];
+
+      metrics.forEach((m, idx) => {
+        const col = idx % 2;
+        const row = Math.floor(idx / 2);
+        const cardW = (phoneW - 150) / 2;
+        const cardH = 260;
+        const cx = phoneX + 50 + col * (cardW + 50);
+        const cy = tileY + row * (cardH + 40);
+
+        renderRoundedRect(ctx, cx, cy, cardW, cardH, 36);
+        ctx.fillStyle = '#111827';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.textAlign = 'left';
+        ctx.font = 'bold 28px -apple-system, sans-serif';
+        ctx.fillStyle = '#94A3B8';
+        ctx.fillText(m.label, cx + 40, cy + 60);
+
+        ctx.font = '800 72px -apple-system, sans-serif';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(m.val, cx + 40, cy + 155);
+
+        ctx.font = 'bold 32px -apple-system, sans-serif';
+        ctx.fillStyle = m.color;
+        ctx.fillText(m.unit, cx + 40 + ctx.measureText(m.val).width + 12, cy + 155);
+
+        ctx.font = '600 24px -apple-system, sans-serif';
+        ctx.fillStyle = m.color;
+        ctx.fillText('● ' + m.status, cx + 40, cy + 215);
+      });
+
+      // Bottom Eco Badge
+      const ecoY = tileY + 600;
+      renderRoundedRect(ctx, phoneX + 50, ecoY, phoneW - 100, 160, 36);
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.12)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 36px -apple-system, sans-serif';
+      ctx.fillStyle = '#10B981';
+      ctx.fillText('⚡ Eco Driving Rating: 94% Excellent', phoneX + 90, ecoY + 68);
+
+      ctx.font = '500 26px -apple-system, sans-serif';
+      ctx.fillStyle = '#E2E8F0';
+      ctx.fillText('Catalytic converter & air-fuel ratio running at peak efficiency.', phoneX + 90, ecoY + 115);
+
+      ctx.restore();
+    }
+
+    // SCREENSHOT 2: DTC Scanner
+    function drawScreenshot2(canvas, w, h) {
+      const ctx = canvas.getContext('2d');
+      const { phoneX, phoneY, phoneW } = drawScreenFrame(
+        ctx, w, h,
+        'DIAGNOSTIC TROUBLE CODES',
+        'Read & Clear Check Engine Lights Instantly',
+        '#EF4444'
+      );
+
+      const startY = phoneY + 140;
+
+      // Status Banner: 2 Faults Detected
+      renderRoundedRect(ctx, phoneX + 50, startY, phoneW - 100, 200, 40);
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
+      ctx.fill();
+      ctx.strokeStyle = '#EF4444';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
+      ctx.font = '800 48px -apple-system, sans-serif';
+      ctx.fillStyle = '#EF4444';
+      ctx.fillText('⚠️ 2 Active DTC Fault Codes Found', phoneX + 90, startY + 80);
+
+      ctx.font = '500 28px -apple-system, sans-serif';
+      ctx.fillStyle = '#FCA5A5';
+      ctx.fillText('ECU Powertrain Module • MIL Check Engine Light ON', phoneX + 90, startY + 140);
+
+      // Fault Card 1: P0300
+      const card1Y = startY + 250;
+      renderRoundedRect(ctx, phoneX + 50, card1Y, phoneW - 100, 390, 40);
+      ctx.fillStyle = '#111827';
+      ctx.fill();
+      ctx.strokeStyle = '#374151';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Code Badge
+      renderRoundedRect(ctx, phoneX + 90, card1Y + 50, 210, 64, 18);
+      ctx.fillStyle = '#EF4444';
+      ctx.fill();
+      ctx.textAlign = 'center';
+      ctx.font = 'bold 36px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('P0300', phoneX + 195, card1Y + 95);
+
+      // Severity Tag
+      renderRoundedRect(ctx, phoneX + 320, card1Y + 50, 200, 64, 18);
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+      ctx.fill();
+      ctx.font = 'bold 26px -apple-system, sans-serif';
+      ctx.fillStyle = '#F87171';
+      ctx.fillText('HIGH SEVERITY', phoneX + 420, card1Y + 92);
+
+      // Description
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 36px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('Random / Multiple Cylinder Misfire Detected', phoneX + 90, card1Y + 175);
+
+      ctx.font = '500 28px -apple-system, sans-serif';
+      ctx.fillStyle = '#94A3B8';
+      ctx.fillText('Symptoms: Engine hesitation during acceleration, rough idle.', phoneX + 90, card1Y + 235);
+
+      ctx.font = '600 26px -apple-system, sans-serif';
+      ctx.fillStyle = '#38BDF8';
+      ctx.fillText('Common Cause: Worn spark plug, ignition coil, or vacuum leak.', phoneX + 90, card1Y + 295);
+
+      // Freeze frame button
+      renderRoundedRect(ctx, phoneX + 90, card1Y + 330, 260, 45, 12);
+      ctx.fillStyle = '#1E293B';
+      ctx.fill();
+      ctx.font = 'bold 22px -apple-system, sans-serif';
+      ctx.fillStyle = '#94A3B8';
+      ctx.textAlign = 'center';
+      ctx.fillText('📊 Freeze Frame Data', phoneX + 220, card1Y + 360);
+
+      // Fault Card 2: P0420
+      const card2Y = card1Y + 440;
+      renderRoundedRect(ctx, phoneX + 50, card2Y, phoneW - 100, 370, 40);
+      ctx.fillStyle = '#111827';
+      ctx.fill();
+      ctx.strokeStyle = '#374151';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Code Badge P0420
+      renderRoundedRect(ctx, phoneX + 90, card2Y + 50, 210, 64, 18);
+      ctx.fillStyle = '#F59E0B';
+      ctx.fill();
+      ctx.textAlign = 'center';
+      ctx.font = 'bold 36px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('P0420', phoneX + 195, card2Y + 95);
+
+      renderRoundedRect(ctx, phoneX + 320, card2Y + 50, 220, 64, 18);
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.2)';
+      ctx.fill();
+      ctx.font = 'bold 26px -apple-system, sans-serif';
+      ctx.fillStyle = '#FBBF24';
+      ctx.fillText('MODERATE IMPACT', phoneX + 430, card2Y + 92);
+
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 36px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('Catalyst System Efficiency Below Threshold (Bank 1)', phoneX + 90, card2Y + 175);
+
+      ctx.font = '500 28px -apple-system, sans-serif';
+      ctx.fillStyle = '#94A3B8';
+      ctx.fillText('Symptoms: Reduced fuel economy, failed emissions inspection.', phoneX + 90, card2Y + 235);
+
+      ctx.font = '600 26px -apple-system, sans-serif';
+      ctx.fillStyle = '#38BDF8';
+      ctx.fillText('Common Cause: Downstream O2 sensor malfunction, catalytic degradation.', phoneX + 90, card2Y + 295);
+
+      // Clear DTC Button
+      const btnY = card2Y + 440;
+      renderRoundedRect(ctx, phoneX + 50, btnY, phoneW - 100, 130, 36);
+      ctx.fillStyle = '#DC2626';
+      ctx.fill();
+
+      ctx.textAlign = 'center';
+      ctx.font = 'bold 40px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('🧹 Clear Fault Codes (Reset Check Engine)', phoneX + phoneW / 2, btnY + 80);
+
+      ctx.restore();
+    }
+
+    // SCREENSHOT 3: AI Mechanic & Repair Defense
+    function drawScreenshot3(canvas, w, h) {
+      const ctx = canvas.getContext('2d');
+      const { phoneX, phoneY, phoneW } = drawScreenFrame(
+        ctx, w, h,
+        'AI MECHANIC ASSISTANT',
+        'Plain-English Explanations & Repair Cost Defense',
+        '#10B981'
+      );
+
+      const startY = phoneY + 140;
+
+      // AI Header Card
+      renderRoundedRect(ctx, phoneX + 50, startY, phoneW - 100, 220, 40);
+      const aiGrad = ctx.createLinearGradient(phoneX + 50, startY, phoneX + phoneW - 50, startY + 220);
+      aiGrad.addColorStop(0, '#064E3B');
+      aiGrad.addColorStop(1, '#065F46');
+      ctx.fillStyle = aiGrad;
+      ctx.fill();
+      ctx.strokeStyle = '#10B981';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
+      ctx.font = '800 48px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('🤖 AI Mechanic Diagnostic Report', phoneX + 90, startY + 75);
+
+      ctx.font = '500 28px -apple-system, sans-serif';
+      ctx.fillStyle = '#A7F3D0';
+      ctx.fillText('Powered by Gemini Automotive Models • 2021 Toyota RAV4 2.5L', phoneX + 90, startY + 135);
+
+      ctx.font = '600 24px -apple-system, sans-serif';
+      ctx.fillStyle = '#34D399';
+      ctx.fillText('Analysis Confidence: 96% Match with OEM Technical Service Bulletins', phoneX + 90, startY + 180);
+
+      // Cost Defense Matrix
+      const costY = startY + 270;
+      renderRoundedRect(ctx, phoneX + 50, costY, phoneW - 100, 260, 40);
+      ctx.fillStyle = '#111827';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 32px -apple-system, sans-serif';
+      ctx.fillStyle = '#10B981';
+      ctx.fillText('🛡️ Mechanic Rip-Off Defense Matrix', phoneX + 90, costY + 60);
+
+      const boxW = (phoneW - 200) / 3;
+      const metrics = [
+        { title: 'DIY Parts Cost', val: '$48 – $65', note: 'OEM Spark Plugs' },
+        { title: 'Fair Shop Labor', val: '$90 – $130', note: '0.8 hr Book Time' },
+        { title: 'Potential Savings', val: '$320+', note: 'Avoid upsells' }
+      ];
+
+      metrics.forEach((m, idx) => {
+        const bx = phoneX + 75 + idx * (boxW + 25);
+        renderRoundedRect(ctx, bx, costY + 95, boxW, 130, 20);
+        ctx.fillStyle = '#1F2937';
+        ctx.fill();
+
+        ctx.textAlign = 'center';
+        ctx.font = '500 20px -apple-system, sans-serif';
+        ctx.fillStyle = '#9CA3AF';
+        ctx.fillText(m.title, bx + boxW / 2, costY + 130);
+
+        ctx.font = 'bold 34px -apple-system, sans-serif';
+        ctx.fillStyle = idx === 2 ? '#34D399' : '#FFFFFF';
+        ctx.fillText(m.val, bx + boxW / 2, costY + 175);
+
+        ctx.font = '500 18px -apple-system, sans-serif';
+        ctx.fillStyle = '#6B7280';
+        ctx.fillText(m.note, bx + boxW / 2, costY + 205);
+      });
+
+      // DIY Step-by-Step Box
+      const stepsY = costY + 310;
+      renderRoundedRect(ctx, phoneX + 50, stepsY, phoneW - 100, 480, 40);
+      ctx.fillStyle = '#111827';
+      ctx.fill();
+      ctx.strokeStyle = '#374151';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 34px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('Step-by-Step DIY Action Plan (Difficulty: 2/5)', phoneX + 90, stepsY + 65);
+
+      const steps = [
+        '1. Inspect Cylinder #3 Ignition Coil wire harness for oil fouling.',
+        '2. Swap Ignition Coil #3 to Cylinder #1 and test if misfire moves.',
+        '3. Check spark plug gap (0.044 in) with a standard feeler gauge.',
+        '4. Re-scan OBD-II port to verify DTC clearing and readiness monitors.'
+      ];
+
+      steps.forEach((s, idx) => {
+        ctx.font = '500 26px -apple-system, sans-serif';
+        ctx.fillStyle = '#E5E7EB';
+        ctx.fillText(s, phoneX + 90, stepsY + 140 + idx * 80);
+      });
+
+      ctx.restore();
+    }
+
+    // SCREENSHOT 4: Live Sensor Graphs
+    function drawScreenshot4(canvas, w, h) {
+      const ctx = canvas.getContext('2d');
+      const { phoneX, phoneY, phoneW } = drawScreenFrame(
+        ctx, w, h,
+        'ADVANCED TELEMETRY CHARTS',
+        'Multi-Sensor Waveform Graphing & ECU Metrics',
+        '#F59E0B'
+      );
+
+      const startY = phoneY + 140;
+
+      // Graph 1: Mass Air Flow (MAF)
+      renderRoundedRect(ctx, phoneX + 50, startY, phoneW - 100, 420, 40);
+      ctx.fillStyle = '#111827';
+      ctx.fill();
+      ctx.strokeStyle = '#374151';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 32px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('MAF Air Flow Sensor (g/s)', phoneX + 90, startY + 60);
+
+      ctx.font = 'bold 44px -apple-system, sans-serif';
+      ctx.fillStyle = '#38BDF8';
+      ctx.textAlign = 'right';
+      ctx.fillText('18.4 g/s', phoneX + phoneW - 90, startY + 65);
+
+      // Draw Waveform 1
+      const gw = phoneW - 180;
+      const gh = 260;
+      const gx = phoneX + 90;
+      const gy = startY + 110;
+
+      // Grid lines
+      ctx.strokeStyle = '#1F2937';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(gx, gy + (gh / 4) * i);
+        ctx.lineTo(gx + gw, gy + (gh / 4) * i);
+        ctx.stroke();
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(gx, gy + gh * 0.7);
+      for (let i = 0; i <= gw; i += 20) {
+        const val = Math.sin(i * 0.04) * 50 + Math.cos(i * 0.08) * 30 + gh * 0.5;
+        ctx.lineTo(gx + i, gy + val);
+      }
+      ctx.strokeStyle = '#38BDF8';
+      ctx.lineWidth = 6;
+      ctx.stroke();
+
+      // Graph 2: Oxygen Sensor Voltage (O2 Bank 1 Sensor 1)
+      const g2Y = startY + 470;
+      renderRoundedRect(ctx, phoneX + 50, g2Y, phoneW - 100, 420, 40);
+      ctx.fillStyle = '#111827';
+      ctx.fill();
+      ctx.strokeStyle = '#374151';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 32px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('O2 Sensor Bank 1 Lambda (V)', phoneX + 90, g2Y + 60);
+
+      ctx.font = 'bold 44px -apple-system, sans-serif';
+      ctx.fillStyle = '#F59E0B';
+      ctx.textAlign = 'right';
+      ctx.fillText('0.78 V (Rich)', phoneX + phoneW - 90, g2Y + 65);
+
+      const gy2 = g2Y + 110;
+      ctx.strokeStyle = '#1F2937';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(gx, gy2 + (gh / 4) * i);
+        ctx.lineTo(gx + gw, gy2 + (gh / 4) * i);
+        ctx.stroke();
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(gx, gy2 + gh * 0.4);
+      for (let i = 0; i <= gw; i += 20) {
+        const val = Math.sin(i * 0.06) * 70 + gh * 0.5;
+        ctx.lineTo(gx + i, gy2 + val);
+      }
+      ctx.strokeStyle = '#F59E0B';
+      ctx.lineWidth = 6;
+      ctx.stroke();
+
+      // Bottom Hardware Info Card
+      const hwY = g2Y + 470;
+      renderRoundedRect(ctx, phoneX + 50, hwY, phoneW - 100, 160, 36);
+      ctx.fillStyle = '#1E293B';
+      ctx.fill();
+
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 30px -apple-system, sans-serif';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText('Compatible with Standard OBD-II Protocols', phoneX + 90, hwY + 65);
+
+      ctx.font = '500 24px -apple-system, sans-serif';
+      ctx.fillStyle = '#94A3B8';
+      ctx.fillText('ISO 15765-4 (CAN) • ISO 9141-2 • KWP2000 • SAE J1850 PWM/VPW', phoneX + 90, hwY + 115);
+
+      ctx.restore();
+    }
+
+    function generateScreenshots(w, h) {
+      currentW = w;
+      currentH = h;
+      for (let i = 1; i <= 4; i++) {
+        const c = document.getElementById('canvas' + i);
+        c.width = w;
+        c.height = h;
+      }
+      drawScreenshot1(document.getElementById('canvas1'), w, h);
+      drawScreenshot2(document.getElementById('canvas2'), w, h);
+      drawScreenshot3(document.getElementById('canvas3'), w, h);
+      drawScreenshot4(document.getElementById('canvas4'), w, h);
+    }
+
+    function downloadCanvas(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function downloadAll() {
+      downloadCanvas('canvas1', '01_CarAI_Telemetry_' + currentW + 'x' + currentH + '.png');
+      setTimeout(() => downloadCanvas('canvas2', '02_CarAI_Fault_Scanner_' + currentW + 'x' + currentH + '.png'), 500);
+      setTimeout(() => downloadCanvas('canvas3', '03_CarAI_AI_Mechanic_' + currentW + 'x' + currentH + '.png'), 1000);
+      setTimeout(() => downloadCanvas('canvas4', '04_CarAI_Sensor_Graphs_' + currentW + 'x' + currentH + '.png'), 1500);
+    }
+
+    // Initial load (Exact dimension for iPhone Dynamic Island medium display)
+    window.onload = function() {
+      generateScreenshots(1179, 2556);
+    };
+  </script>
+</body>
+</html>
