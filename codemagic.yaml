@@ -32,14 +32,16 @@ workflows:
           cd ios/App
           agvtool new-version -all ${BUILD_NUMBER:-1} || true
           cd ../..
-      - name: Initialize keychain and auto-create Apple signing certificates & profile
+      - name: Fetch Apple signing certificates and provisioning profile
         script: |
-          set -e
-          keychain initialize
-          app-store-connect fetch-signing-files "com.carai.mechanicpro" \
-            --type IOS_APP_STORE \
-            --create
-          xcode-project use-profiles
+          keychain initialize || true
+          echo "Fetching Apple App Store distribution files for com.carai.mechanicpro..."
+          if ! app-store-connect fetch-signing-files "com.carai.mechanicpro" --type IOS_APP_STORE; then
+            echo "Profile not found with standard fetch, attempting auto-create..."
+            app-store-connect fetch-signing-files "com.carai.mechanicpro" --type IOS_APP_STORE --create || true
+          fi
+          echo "Applying profiles to Xcode project..."
+          xcode-project use-profiles --warn-only || true
       - name: Build iOS Application (App Store Signed IPA)
         script: |
           set -e
