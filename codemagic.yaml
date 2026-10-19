@@ -9,9 +9,6 @@ workflows:
       node: 22
       xcode: latest
       cocoapods: default
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.carai.mechanicpro
     scripts:
       - name: Setup Node 22 & Install dependencies
         script: |
@@ -27,9 +24,15 @@ workflows:
       - name: Sync iOS Native Project
         script: |
           npx --yes @capacitor/cli sync ios
+      - name: Initialize keychain and auto-create signing certificates & profiles
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "com.carai.mechanicpro" \
+            --type IOS_APP_STORE \
+            --create
       - name: Set up code signing settings on Xcode project
         script: |
-          xcode-project use-profiles || true
+          xcode-project use-profiles
       - name: Build iOS Application
         script: |
           cd ios/App
