@@ -10,22 +10,21 @@ workflows:
     scripts:
       - name: Install dependencies
         script: |
-          npm install
+          npm install --legacy-peer-deps
       - name: Build Web App
         script: |
           npm run build
       - name: Sync iOS Native Project
         script: |
-          npx cap sync ios
+          npx --yes @capacitor/cli sync ios
       - name: Build iOS Application
         script: |
           cd ios/App
-          xcodebuild -project App.xcodeproj \
-            -scheme App \
-            -destination 'generic/platform=iOS' \
-            -configuration Release \
-            CODE_SIGNING_ALLOWED=NO \
-            archive -archivePath build/App.xcarchive
+          if [ -d "App.xcworkspace" ]; then
+            xcodebuild -workspace App.xcworkspace -scheme App -destination 'generic/platform=iOS' -configuration Release CODE_SIGNING_ALLOWED=NO archive -archivePath build/App.xcarchive
+          else
+            xcodebuild -project App.xcodeproj -scheme App -destination 'generic/platform=iOS' -configuration Release CODE_SIGNING_ALLOWED=NO archive -archivePath build/App.xcarchive
+          fi
     artifacts:
       - ios/App/build/App.xcarchive
       - ios/App/build/**/*.app
