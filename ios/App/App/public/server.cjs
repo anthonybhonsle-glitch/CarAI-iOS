@@ -872,8 +872,12 @@ function processDirectBankCheckout(req, ip = "127.0.0.1") {
   let paymentDetailsMasked = "Visa ending in 4242";
   let bankSettlementNetwork = "Visa / Direct 256-Bit Bank Gateway";
   const amount = planType === "pro_annual" ? 79 : planType === "pro_biannual" ? 39.99 : 9.99;
-  const normalizedMethod = paymentMethod === "card" || paymentMethod === "credit_card" ? "credit_card" : paymentMethod === "bank_ach" ? "bank_ach" : paymentMethod === "apple_pay" ? "apple_pay" : paymentMethod === "google_pay" ? "google_pay" : "credit_card";
-  if (normalizedMethod === "credit_card") {
+  const normalizedMethod = paymentMethod === "card" || paymentMethod === "credit_card" ? "credit_card" : paymentMethod === "bank_ach" ? "bank_ach" : paymentMethod === "apple_pay" ? "apple_pay" : paymentMethod === "google_pay" ? "google_pay" : paymentMethod === "upi" ? "upi" : "credit_card";
+  if (normalizedMethod === "upi") {
+    const rawUpi = (req.upiId || "driver@okhdfcbank").trim();
+    paymentDetailsMasked = `UPI ID: ${rawUpi}`;
+    bankSettlementNetwork = "NPCI Unified Payments Interface (UPI 2.0 Real-Time Settlement)";
+  } else if (normalizedMethod === "credit_card") {
     const rawNumber = cardNumber && cardNumber.trim().length > 0 ? cardNumber : "4000 1234 5678 4242";
     const cleanCard = rawNumber.replace(/\D/g, "") || "4000123456784242";
     const last4 = cleanCard.length >= 4 ? cleanCard.slice(-4) : "4242";

@@ -1,19 +1,16 @@
-// CarAI Pro Service Worker for Offline OBD-II Diagnostics & Fast Caching
-const CACHE_NAME = 'carai-pro-v1';
+// CarAI Pro Service Worker - Instant Load & Fast Fallback
+const CACHE_NAME = 'carai-pro-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
   '/icon.svg',
-  '/privacy.html',
-  '/terms.html',
-  '/data-safety.html'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS).catch((err) => console.log('Cache prefetch bypass', err));
+      return cache.addAll(STATIC_ASSETS).catch(() => {});
     })
   );
   self.skipWaiting();
@@ -35,22 +32,34 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Let API requests pass directly to network
-  if (event.request.url.includes('/api/')) {
+  // Let all API and WebSocket requests go straight to network
+  if (event.request.url.includes('/api/') || event.request.method !== 'GET') {
     return;
   }
 
+  // Network-first with fast 2-second timeout, falling back to cache
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return (
-        cached ||
-        fetch(event.request).catch(() => {
-          // Fallback to cached index.html for navigation requests
-          if (event.request.mode === 'navigate') {
-            return caches.match('/index.html');
-          }
-        })
-      );
-    })
+    (async () => {
+      try {
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Network timeout')), 2000)
+        );
+        const response = await Promise.race([fetch(event.request), timeoutPromise]);
+        if (response && response.status === 200) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(event.request, response.clone());
+        }
+        return response;
+      } catch (_err) {
+        // Fallback to cache or index.html for navigation
+        const cached = await caches.match(event.request);
+        if (cached) return cached;
+        if (event.request.mode === 'navigate') {
+          const indexFallback = await caches.match('/index.html');
+          if (indexFallback) return indexFallback;
+        }
+        return fetch(event.request);
+      }
+    })()
   );
 });
