@@ -5,6 +5,13 @@ workflows:
     instance_type: mac_mini_m2
     integrations:
       app_store_connect: Apple App Store Key
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: '*'
+          include: true
+          source: true
     environment:
       node: 22
       xcode: latest
