@@ -1836,7 +1836,7 @@ var MARKETPLACE_PARTS = [
 // server.ts
 import_dotenv.default.config();
 var app = (0, import_express.default)();
-var PORT = 3e3;
+var PORT = Number(process.env.PORT) || 3e3;
 app.use(import_express.default.json({ limit: "15mb" }));
 app.get("/api/health", (req, res) => {
   res.json({
@@ -2313,7 +2313,10 @@ app.all("/api/*", (req, res) => {
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
     const vite = await (0, import_vite.createServer)({
-      server: { middlewareMode: true, host: "0.0.0.0", port: 3e3 },
+      server: {
+        middlewareMode: true,
+        hmr: false
+      },
       appType: "spa"
     });
     app.use(vite.middlewares);
@@ -2324,8 +2327,28 @@ async function startServer() {
       res.sendFile(import_path.default.join(distPath, "index.html"));
     });
   }
-  app.listen(PORT, "0.0.0.0", () => {
+  const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`CarAI Full-Stack Server listening on http://0.0.0.0:${PORT}`);
+  });
+  server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      console.warn(`Port ${PORT} in use, retrying in 1s...`);
+      setTimeout(() => {
+        try {
+          server.close();
+        } catch (_) {
+        }
+        server.listen(PORT, "0.0.0.0");
+      }, 1e3);
+    } else {
+      console.error("Server error:", err);
+    }
+  });
+  process.on("SIGTERM", () => {
+    server.close(() => process.exit(0));
+  });
+  process.on("SIGINT", () => {
+    server.close(() => process.exit(0));
   });
 }
 startServer();

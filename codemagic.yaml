@@ -35,13 +35,16 @@ workflows:
       - name: Fetch Apple signing certificates and provisioning profile
         script: |
           set -e
-          keychain initialize || true
+          keychain initialize
           echo "Fetching Apple App Store distribution files for com.carai.mechanicpro..."
-          app-store-connect fetch-signing-files "com.carai.mechanicpro" --type IOS_APP_STORE --create
+          app-store-connect fetch-signing-files "com.carai.mechanicpro" --type IOS_APP_STORE
           xcode-project use-profiles --project ios/App/App.xcodeproj
       - name: Build iOS Application (App Store Signed IPA)
         script: |
           set -e
+          cd ios/App
+          xcodebuild -resolvePackageDependencies -project App.xcodeproj -scheme App || true
+          cd ../..
           xcode-project build-ipa \
             --project "ios/App/App.xcodeproj" \
             --scheme "App"
