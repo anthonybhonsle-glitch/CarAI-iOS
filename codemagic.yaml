@@ -58,21 +58,63 @@ workflows:
             --certificate-key=@file:/tmp/cert_key \
             --create \
             --verbose
+          echo "Adding certificates to keychain..."
+          keychain add-certificates
           echo "Available Code Signing Identities in Keychain:"
           security find-identity -v -p codesigning || true
           echo "Applying provisioning profile to project..."
-          xcode-project use-profiles --project ios/App/App.xcodeproj
+          xcode-project use-profiles --project ios/App/App.xcodeproj || true
+          
+          # If use-profiles generated an export options plist, adopt it
+          if [ -f "/Users/builder/export_options.plist" ]; then
+            echo "Adopting /Users/builder/export_options.plist..."
+            cp /Users/builder/export_options.plist ios/App/ExportOptions.plist
+          elif [ -f "$HOME/export_options.plist" ]; then
+            echo "Adopting $HOME/export_options.plist..."
+            cp "$HOME/export_options.plist" ios/App/ExportOptions.plist
+          fi
       - name: Build iOS Application (App Store Signed IPA)
         script: |
           set -e
-          cd ios/App
           echo "Resolving Swift Package Dependencies..."
-          xcodebuild -resolvePackageDependencies -project App.xcodeproj -scheme App || true
-          cd ../..
-          echo "Building and exporting App Store Signed IPA..."
-          xcode-project build-ipa \
-            --project "ios/App/App.xcodeproj" \
-            --scheme "App"
+          xcodebuild -resolvePackageDependencies \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -skipPackagePluginValidation \
+            -skipMacroValidation || true
+
+          echo "Preparing build directories..."
+          mkdir -p build/ios/xcarchive build/ios/ipa
+
+          EXPORT_PLIST="ios/App/ExportOptions.plist"
+          if [ -f "/Users/builder/export_options.plist" ]; then
+            echo "Using /Users/builder/export_options.plist..."
+            EXPORT_PLIST="/Users/builder/export_options.plist"
+          elif [ -f "$HOME/export_options.plist" ]; then
+            echo "Using $HOME/export_options.plist..."
+            EXPORT_PLIST="$HOME/export_options.plist"
+          fi
+
+          echo "Archiving iOS Application with xcodebuild..."
+          xcodebuild archive \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/ios/xcarchive/App.xcarchive \
+            -skipPackagePluginValidation \
+            -skipMacroValidation \
+            CODE_SIGN_STYLE="Automatic" \
+            DEVELOPMENT_TEAM="VDW86R444N" \
+            PROVISIONING_PROFILE_SPECIFIER=""
+
+          echo "Exporting App Store Signed IPA..."
+          xcodebuild -exportArchive \
+            -archivePath build/ios/xcarchive/App.xcarchive \
+            -exportOptionsPlist "$EXPORT_PLIST" \
+            -exportPath build/ios/ipa \
+            -allowProvisioningUpdates
+
           echo "Build completed successfully! Exported files:"
           ls -la build/ios/ipa/*.ipa
     artifacts:

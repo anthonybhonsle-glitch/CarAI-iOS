@@ -7,14 +7,7 @@
     <key>teamID</key>
     <string>VDW86R444N</string>
     <key>signingStyle</key>
-    <string>manual</string>
-    <key>signingCertificate</key>
-    <string>Apple Distribution</string>
-    <key>provisioningProfiles</key>
-    <dict>
-        <key>com.carai.mechanicpro</key>
-        <string>CarAI App Store Profile</string>
-    </dict>
+    <string>automatic</string>
     <key>destination</key>
     <string>export</string>
     <key>stripSwiftSymbols</key>
