@@ -9,6 +9,8 @@ workflows:
       node: 22
       xcode: latest
       cocoapods: default
+      vars:
+        BUNDLE_ID: "com.carai.mechanicpro"
     scripts:
       - name: Setup Node 22 & Install dependencies
         script: |
@@ -29,8 +31,12 @@ workflows:
           npx --yes @capacitor/cli sync ios
       - name: Set dynamic build version
         script: |
+          set -e
           cd ios/App
-          agvtool new-version -all ${BUILD_NUMBER:-1} || true
+          VERSION_NUM=${BUILD_NUMBER:-1}
+          echo "Setting iOS build number to: $VERSION_NUM"
+          sed -i '' "s/CURRENT_PROJECT_VERSION = [0-9]*/CURRENT_PROJECT_VERSION = $VERSION_NUM/g" App.xcodeproj/project.pbxproj 2>/dev/null || sed -i "s/CURRENT_PROJECT_VERSION = [0-9]*/CURRENT_PROJECT_VERSION = $VERSION_NUM/g" App.xcodeproj/project.pbxproj 2>/dev/null || true
+          agvtool new-version -all $VERSION_NUM || true
           cd ../..
       - name: Fetch Apple signing certificates and provisioning profile
         script: |
@@ -38,16 +44,23 @@ workflows:
           keychain initialize
           echo "Fetching Apple App Store distribution files for com.carai.mechanicpro..."
           app-store-connect fetch-signing-files "com.carai.mechanicpro" --type IOS_APP_STORE
+          echo "Available Code Signing Identities in Keychain:"
+          security find-identity -v -p codesigning || true
+          echo "Applying provisioning profile to project..."
           xcode-project use-profiles --project ios/App/App.xcodeproj
       - name: Build iOS Application (App Store Signed IPA)
         script: |
           set -e
           cd ios/App
+          echo "Resolving Swift Package Dependencies..."
           xcodebuild -resolvePackageDependencies -project App.xcodeproj -scheme App || true
           cd ../..
+          echo "Building and exporting App Store Signed IPA..."
           xcode-project build-ipa \
             --project "ios/App/App.xcodeproj" \
             --scheme "App"
+          echo "Build completed successfully! Exported files:"
+          ls -la build/ios/ipa/*.ipa
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log

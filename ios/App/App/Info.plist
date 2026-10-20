@@ -53,6 +53,12 @@
 	<string>CarAI Pro connects to ELM327 OBD-II Bluetooth adapters to diagnose vehicle trouble codes and live telemetry.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>CarAI Pro connects to OBD-II vehicle diagnostic adapters.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>CarAI Pro uses your camera for dashcam telemetry recording and capturing vehicle photos for AI diagnostics.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CarAI Pro requires photo library access to upload photos of your vehicle for AI visual inspection and tuning.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>CarAI Pro uses the microphone for optional audio notes and dashcam voice timestamps.</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>arm64</string>
