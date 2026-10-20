@@ -49,19 +49,46 @@ workflows:
         script: |
           set -e
           keychain initialize
-          echo "Generating 2048-bit RSA private key for certificate creation..."
-          ssh-keygen -t rsa -b 2048 -m PEM -f /tmp/cert_key -q -N ""
+          
+          echo "Generating standard 2048-bit RSA PEM private key..."
+          rm -f /tmp/cert_key /tmp/cert_key.pub
+          openssl genrsa -traditional -out /tmp/cert_key 2048 2>/dev/null || openssl genrsa -out /tmp/cert_key 2048
+          chmod 600 /tmp/cert_key
+
           echo "Fetching / Creating Apple App Store distribution files for com.carai.mechanicpro..."
-          app-store-connect fetch-signing-files "com.carai.mechanicpro" \
+          FETCH_SUCCESS=false
+
+          if app-store-connect fetch-signing-files "com.carai.mechanicpro" \
             --platform IOS \
             --type IOS_APP_STORE \
             --certificate-key=@file:/tmp/cert_key \
             --create \
-            --verbose
+            --verbose; then
+              FETCH_SUCCESS=true
+          elif app-store-connect fetch-signing-files "com.carai.mechanicpro" \
+            --platform IOS \
+            --type IOS_APP_STORE \
+            --create \
+            --verbose; then
+              FETCH_SUCCESS=true
+          elif app-store-connect fetch-signing-files "com.carai.mechanicpro" \
+            --platform IOS \
+            --type IOS_APP_STORE \
+            --verbose; then
+              FETCH_SUCCESS=true
+          fi
+
+          if [ "$FETCH_SUCCESS" = "false" ]; then
+            echo "❌ Signing file fetch failed. Check your Apple Developer account limits."
+            exit 1
+          fi
+
           echo "Adding certificates to keychain..."
           keychain add-certificates
+          
           echo "Available Code Signing Identities in Keychain:"
           security find-identity -v -p codesigning || true
+          
           echo "Applying provisioning profile to project..."
           xcode-project use-profiles --project ios/App/App.xcodeproj || true
           
@@ -92,9 +119,6 @@ workflows:
           elif [ -f "$HOME/export_options.plist" ]; then
             echo "Using $HOME/export_options.plist..."
             EXPORT_PLIST_ARG="--export-options-plist $HOME/export_options.plist"
-          elif [ -f "ios/App/ExportOptions.plist" ]; then
-            echo "Using ios/App/ExportOptions.plist..."
-            EXPORT_PLIST_ARG="--export-options-plist ios/App/ExportOptions.plist"
           fi
 
           echo "Building App Store Signed IPA with Codemagic..."
