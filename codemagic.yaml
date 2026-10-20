@@ -49,8 +49,15 @@ workflows:
         script: |
           set -e
           keychain initialize
-          echo "Fetching Apple App Store distribution files for com.carai.mechanicpro..."
-          app-store-connect fetch-signing-files "com.carai.mechanicpro" --type IOS_APP_STORE
+          echo "Generating 2048-bit RSA private key for certificate creation..."
+          ssh-keygen -t rsa -b 2048 -m PEM -f /tmp/cert_key -q -N ""
+          echo "Fetching / Creating Apple App Store distribution files for com.carai.mechanicpro..."
+          app-store-connect fetch-signing-files "com.carai.mechanicpro" \
+            --platform IOS \
+            --type IOS_APP_STORE \
+            --certificate-key=@file:/tmp/cert_key \
+            --create \
+            --verbose
           echo "Available Code Signing Identities in Keychain:"
           security find-identity -v -p codesigning || true
           echo "Applying provisioning profile to project..."
