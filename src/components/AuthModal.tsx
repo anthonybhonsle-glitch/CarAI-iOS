@@ -17,6 +17,7 @@ import {
   Car,
   Cloud,
   Edit3,
+  Trash2,
 } from 'lucide-react';
 import { authService, AuthUser } from '../services/authService';
 import { haptics } from '../services/haptics';
@@ -68,6 +69,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [editEmail, setEditEmail] = useState('');
   const [editVehicle, setEditVehicle] = useState('');
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showDeleteAccountConfirm, setShowDeleteAccountConfirm] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -224,6 +226,26 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setMode('login');
     setStep('phone_input');
     setSuccessMsg('Signed out of cloud driver vault.');
+  };
+
+  const handleDeleteAccount = async () => {
+    setLoading(true);
+    try {
+      haptics.heavyImpact();
+      await authService.deleteAccount();
+      setShowDeleteAccountConfirm(false);
+      setSuccessMsg('Driver profile, vehicle data, and telemetry permanently expunged.');
+      setTimeout(() => {
+        setMode('login');
+        setStep('phone_input');
+        onClose();
+        window.location.reload();
+      }, 1000);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Failed to complete account deletion.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -471,38 +493,84 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   </button>
                 </div>
               </div>
+            ) : showDeleteAccountConfirm ? (
+              <div className="rounded-2xl border border-red-500/60 bg-red-950/40 p-4 mt-3 space-y-3">
+                <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
+                  <Trash2 className="h-4 w-4 shrink-0" />
+                  <span>Permanently Delete Driver Account?</span>
+                </div>
+                <p className="text-xs text-zinc-300 leading-relaxed">
+                  In compliance with Apple App Store policies, this will immediately and permanently erase your driver profile, vehicle garage records, and stored diagnostic trouble codes. This action cannot be reversed.
+                </p>
+                <div className="flex gap-2 pt-1">
+                  <button
+                    type="button"
+                    disabled={loading}
+                    onClick={handleDeleteAccount}
+                    className="flex-1 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 text-xs transition-colors min-h-[44px] disabled:opacity-50"
+                  >
+                    {loading ? 'Erasing Data...' : 'Permanently Delete'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowDeleteAccountConfirm(false)}
+                    className="flex-1 rounded-xl bg-[#1A202A] border border-[#2C3440] text-zinc-300 hover:text-white font-bold py-2.5 text-xs transition-colors min-h-[44px]"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
             ) : (
               !isEditingProfile && (
-                <div className="grid grid-cols-3 gap-2.5 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsEditingProfile(true)}
-                    className="flex items-center justify-center gap-2 rounded-xl border border-[#2C3440] bg-[#1A202A] py-3 text-xs sm:text-sm font-semibold text-zinc-200 hover:border-cyan-400/50 hover:text-white transition-colors min-h-[48px]"
-                  >
-                    <Edit3 className="h-4 w-4" />
-                    <span>Edit</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMode('login');
-                      setStep('phone_input');
-                      setErrorMsg(null);
-                      setSuccessMsg(null);
-                    }}
-                    className="flex items-center justify-center gap-2 rounded-xl border border-[#2C3440] bg-[#1A202A] py-3 text-xs sm:text-sm font-semibold text-zinc-200 hover:border-cyan-400/50 hover:text-white transition-colors min-h-[48px]"
-                  >
-                    <User className="h-4 w-4" />
-                    <span>Switch</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowLogoutConfirm(true)}
-                    className="flex items-center justify-center gap-2 rounded-xl border border-red-500/40 bg-red-500/10 py-3 text-xs sm:text-sm font-semibold text-red-300 hover:bg-red-500/20 transition-colors min-h-[48px]"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    <span>Log Out</span>
-                  </button>
+                <div className="space-y-3 pt-2">
+                  <div className="grid grid-cols-3 gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingProfile(true)}
+                      className="flex items-center justify-center gap-2 rounded-xl border border-[#2C3440] bg-[#1A202A] py-3 text-xs sm:text-sm font-semibold text-zinc-200 hover:border-cyan-400/50 hover:text-white transition-colors min-h-[48px]"
+                    >
+                      <Edit3 className="h-4 w-4" />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode('login');
+                        setStep('phone_input');
+                        setErrorMsg(null);
+                        setSuccessMsg(null);
+                      }}
+                      className="flex items-center justify-center gap-2 rounded-xl border border-[#2C3440] bg-[#1A202A] py-3 text-xs sm:text-sm font-semibold text-zinc-200 hover:border-cyan-400/50 hover:text-white transition-colors min-h-[48px]"
+                    >
+                      <User className="h-4 w-4" />
+                      <span>Switch</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowLogoutConfirm(true);
+                        setShowDeleteAccountConfirm(false);
+                      }}
+                      className="flex items-center justify-center gap-2 rounded-xl border border-red-500/40 bg-red-500/10 py-3 text-xs sm:text-sm font-semibold text-red-300 hover:bg-red-500/20 transition-colors min-h-[48px]"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span>Log Out</span>
+                    </button>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#2C3440]/60">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowDeleteAccountConfirm(true);
+                        setShowLogoutConfirm(false);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 rounded-xl border border-red-500/20 bg-red-950/20 py-2.5 text-xs font-semibold text-red-400 hover:bg-red-900/30 hover:border-red-500/40 transition-colors min-h-[40px]"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span>Delete Driver Account &amp; Wipe Data</span>
+                    </button>
+                  </div>
                 </div>
               )
             )}

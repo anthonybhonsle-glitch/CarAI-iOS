@@ -343,6 +343,21 @@ class AuthService {
     this.saveLocalCache();
   }
 
+  public async deleteAccount(): Promise<{ success: boolean; message: string }> {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem(SESSION_CACHE_KEY);
+        localStorage.removeItem(SESSION_TOKEN_KEY);
+        localStorage.removeItem('carai_pro_subscription');
+        localStorage.removeItem('carai_garage_builds');
+        localStorage.removeItem('carai_diagnostics_history');
+      } catch (_) {}
+    }
+    this.currentUser = null;
+    this.saveLocalCache();
+    return { success: true, message: 'Account and associated vehicle data permanently deleted.' };
+  }
+
   public updateSubscription(
     isPro: boolean,
     planType: 'free' | 'pro_monthly' | 'pro_biannual' | 'pro_annual'

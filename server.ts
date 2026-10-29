@@ -47,6 +47,7 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json({ limit: '15mb' }));
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 // ----------------------------------------------------
 // 1. HEALTH & SYSTEM API

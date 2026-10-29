@@ -1838,6 +1838,7 @@ import_dotenv.default.config();
 var app = (0, import_express.default)();
 var PORT = Number(process.env.PORT) || 3e3;
 app.use(import_express.default.json({ limit: "15mb" }));
+app.use(import_express.default.static(import_path.default.join(process.cwd(), "public")));
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
